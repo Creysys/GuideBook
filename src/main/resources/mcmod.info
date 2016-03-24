@@ -1,0 +1,16 @@
+[
+{
+  "modid": "guideBook",
+  "name": "Guide Book",
+  "description": "Adds a book that helps.",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["Creysys"],
+  "credits": "To you",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]
