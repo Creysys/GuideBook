@@ -4,6 +4,7 @@ import net.minecraft.item.ItemStack;
 import org.apache.commons.lang3.ArrayUtils;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 
 /**
@@ -23,7 +24,7 @@ public class RecipeManager {
 
     public static void load() {
         loadedRecipes = new HashMap<RecipeHandler, ArrayList<DrawableRecipe>>();
-        for (RecipeHandler handler : handlers) loadedRecipes.put(handler, handler.getRecipes());
+        for (int i = handlers.size() - 1; i >= 0; i--) loadedRecipes.put(handlers.get(i), handlers.get(i).getRecipes());
 
         craftableItems = new ArrayList<ItemStack>();
         for (ArrayList<DrawableRecipe> recipes : loadedRecipes.values())
