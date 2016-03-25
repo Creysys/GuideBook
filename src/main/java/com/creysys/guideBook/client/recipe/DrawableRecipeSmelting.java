@@ -5,6 +5,7 @@ import com.creysys.guideBook.client.GuideBookGui;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.oredict.OreDictionary;
 
 /**
  * Created by Creysys on 21 Mar 16.
@@ -21,15 +22,11 @@ public class DrawableRecipeSmelting extends DrawableRecipe {
         this.input = input.copy();
         this.output = output.copy();
         this.ticks = 0;
-
-        //Check for wildcard damage 32767
-        if(this.input.getItemDamage() == 32767) this.input.setItemDamage(0);
-        if(this.output.getItemDamage() == 32767) this.output.setItemDamage(0);
     }
 
     @Override
-    public void update() {
-        ticks++;
+    public ItemStack[] getInput() {
+        return new ItemStack[] { input };
     }
 
     @Override
@@ -51,8 +48,8 @@ public class DrawableRecipeSmelting extends DrawableRecipe {
 
     @Override
     public void mouseClick(GuideBookGui gui, int pageRecipeIndex, int mouseX, int mouseY, int mouseButton) {
-        if(pageRecipeIndex == 0) clickRecipe(gui, gui.left + 48,  gui.top + 14, mouseX, mouseY);
-        else if(pageRecipeIndex == 1) clickRecipe(gui, gui.left + 48,  gui.top + 94, mouseX, mouseY);
+        if(pageRecipeIndex == 0) clickRecipe(gui, gui.left + 48,  gui.top + 14, mouseX, mouseY, mouseButton);
+        else if(pageRecipeIndex == 1) clickRecipe(gui, gui.left + 48,  gui.top + 94, mouseX, mouseY, mouseButton);
     }
 
 
@@ -67,29 +64,17 @@ public class DrawableRecipeSmelting extends DrawableRecipe {
         j = ticks / 6 % 22;
         gui.drawTexturedModalRect(left + 25, top + 19, 0, 56, j, 15);
 
-        RenderHelper.enableGUIStandardItemLighting();
-        gui.getRenderItem().renderItemAndEffectIntoGUI(input, left + 1, top + 1);
-        gui.getRenderItem().renderItemOverlayIntoGUI(gui.getFontRenderer(), input, left + 1, top + 1, null);
-        gui.getRenderItem().renderItemAndEffectIntoGUI(output, left + 60, top + 18);
-        gui.getRenderItem().renderItemOverlayIntoGUI(gui.getFontRenderer(), output, left + 60, top + 18, null);
+        drawItemStack(gui, input, left + 1, top + 1, false);
+        drawItemStack(gui, output, left + 60, top + 18, true);
     }
 
     public void drawRecipeTooltip(GuideBookGui gui, int left, int top, int mouseX, int mouseY) {
-        if(left + 1 < mouseX && mouseX < left + 1 + 18 && top + 1 < mouseY && mouseY < top + 1 + 18) {
-            gui.drawHoveringString(input.getDisplayName(), mouseX, mouseY);
-            return;
-        }
-
-        else if(left + 60 < mouseX && mouseX < left + 60 + 18 && top + 18 < mouseY && mouseY < top + 18 + 18) {
-            gui.drawHoveringString(output.getDisplayName(), mouseX, mouseY);
-            return;
-        }
+        drawItemStackTooltip(gui, input, left + 1, top + 1, mouseX, mouseY);
+        drawItemStackTooltip(gui, output, left + 60, top + 18, mouseX, mouseY);
     }
 
-    public void clickRecipe(GuideBookGui gui, int left, int top, int mouseX, int mouseY) {
-        if(left + 1 < mouseX && mouseX < left + 1 + 18 && top + 1 < mouseY && mouseY < top + 1 + 18) {
-            gui.openRecipeState(input);
-            return;
-        }
+    public void clickRecipe(GuideBookGui gui, int left, int top, int mouseX, int mouseY, int mouseButton) {
+        clickItemStack(gui, input, left + 1, top + 1, mouseX, mouseY, mouseButton);
+        clickItemStack(gui, output, left + 60, top + 18, mouseX, mouseY, mouseButton);
     }
 }

@@ -12,6 +12,7 @@ import net.minecraft.client.renderer.RenderItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.translation.I18n;
+import net.minecraftforge.oredict.OreDictionary;
 
 import java.io.IOException;
 import java.util.*;
@@ -82,8 +83,8 @@ public class GuideBookGui extends GuiContainer {
         private GuiButton previous;
         private GuiButton next;
 
-        public StateHome(State lastState) {
-            super(lastState);
+        public StateHome() {
+            super(null);
             searchBar = new GuiTextField(0, fontRendererObj, left + 38, top + 22, 110, 16);
             searchBar.setFocused(true);
             updateSearchResult();
@@ -161,17 +162,23 @@ public class GuideBookGui extends GuiContainer {
         public void mouseClicked(int mouseX, int mouseY, int mouseButton) {
             searchBar.mouseClicked(mouseX, mouseY, mouseButton);
 
-            if(mouseButton == 0) {
+            if (mouseButton == 0) {
                 previous.mouseClicked(mouseX, mouseY);
                 next.mouseClicked(mouseX, mouseY);
+            }
 
-                if (searchResult != null) {
-                    for (int i = page * 36; i < searchResult.size() && i < page * 36 + 36; i++) {
-                        int x = left + 40 + (i % itemsPerRow) * itemSize;
-                        int y = top + 42 + i / itemsPerRow * itemSize - page * itemSize * 6;
+            if (searchResult != null) {
+                for (int i = page * 36; i < searchResult.size() && i < page * 36 + 36; i++) {
+                    int x = left + 40 + (i % itemsPerRow) * itemSize;
+                    int y = top + 42 + i / itemsPerRow * itemSize - page * itemSize * 6;
 
-                        if (x < mouseX && mouseX < x + itemSize && y < mouseY && mouseY < y + itemSize) {
+                    if (x < mouseX && mouseX < x + itemSize && y < mouseY && mouseY < y + itemSize) {
+                        if(mouseButton == 0){
                             openRecipeState(searchResult.get(i));
+                            break;
+                        }
+                        else if(mouseButton == 1){
+                            openUsageState(searchResult.get(i));
                             break;
                         }
                     }
@@ -189,19 +196,23 @@ public class GuideBookGui extends GuiContainer {
             }
         }
     }
-    public class StateRecipe extends State{
+    public class StateRecipe extends State {
         private LinkedHashMap<RecipeHandler, ArrayList<DrawableRecipe>> handlers;
         private int tab;
         private int page;
+        public String cmd;
+        public Object arg;
 
         private GuiButton previous;
         private GuiButton next;
 
-        public StateRecipe(State lastState, LinkedHashMap<RecipeHandler, ArrayList<DrawableRecipe>> handlers){
+        public StateRecipe(State lastState, LinkedHashMap<RecipeHandler, ArrayList<DrawableRecipe>> handlers, String cmd, Object arg){
             super(lastState);
             this.handlers = handlers;
             this.tab = 0;
             this.page = 0;
+            this.cmd = cmd;
+            this.arg = arg;
 
             previous = new GuiButton(0, left + 28, top + 150, 3, 207, 18, 10, I18n.translateToLocal("guideBook.previousPage"));
             next = new GuiButton(1, left + 134, top + 150, 3, 194, 18, 10, I18n.translateToLocal("guideBook.nextPage"));
@@ -304,27 +315,34 @@ public class GuideBookGui extends GuiContainer {
             ArrayList<DrawableRecipe> recipes = tab.getValue();
 
             for (int i = 0; i < handler.recipesPerPage(); i++) {
-                if (recipes.size() > page * handler.recipesPerPage() + i) recipes.get(page * handler.recipesPerPage() + i).mouseClick(GuideBookGui.this, i, mouseX, mouseY, mouseButton);
+                if (recipes.size() > page * handler.recipesPerPage() + i)
+                    recipes.get(page * handler.recipesPerPage() + i).mouseClick(GuideBookGui.this, i, mouseX, mouseY, mouseButton);
             }
 
-            if(mouseButton == 0) {
+            if (mouseButton == 0) {
                 previous.mouseClicked(mouseX, mouseY);
                 next.mouseClicked(mouseX, mouseY);
+            }
 
-                int i = 0;
-                for (RecipeHandler h : handlers.keySet()) {
-                    int x = left + 155;
-                    int y = top + 8 + i * 22;
+            int i = 0;
+            for (RecipeHandler h : handlers.keySet()) {
+                int x = left + 155;
+                int y = top + 8 + i * 22;
 
-                    mc.getTextureManager().bindTexture(bookGuiTextures);
-                    if(h != handler && x < mouseX && mouseX < x + 20 && y < mouseY && mouseY < y + 22){
+                mc.getTextureManager().bindTexture(bookGuiTextures);
+                if (x < mouseX && mouseX < x + 20 && y < mouseY && mouseY < y + 22) {
+                    if(mouseButton == 0 && h != handler) {
                         this.tab = i;
                         this.page = 0;
                         break;
                     }
-
-                    i++;
+                    else if(mouseButton == 1) {
+                        openHandlerUsageState(h);
+                        break;
+                    }
                 }
+
+                i++;
             }
         }
 
@@ -348,6 +366,9 @@ public class GuideBookGui extends GuiContainer {
     public static final int bookImageWidth = 192;
     public static final int bookImageHeight = 192;
 
+    public static String onOpenCmd = null;
+    public static Object onOpenArg = null;
+
     public int left;
     public int top;
 
@@ -359,20 +380,90 @@ public class GuideBookGui extends GuiContainer {
 
     public ArrayList<DrawableRecipe> getRecipesFor(ArrayList<DrawableRecipe> recipes, ItemStack stack) {
         ArrayList<DrawableRecipe> ret = new ArrayList<DrawableRecipe>();
-        for (DrawableRecipe recipe : recipes) if(recipe.getOutput().isItemEqual(stack)) ret.add(recipe);
+        for (DrawableRecipe recipe : recipes){
+            ItemStack output = recipe.getOutput();
+            if(output.isItemEqual(stack) || (stack.getItemDamage() == OreDictionary.WILDCARD_VALUE && stack.getItem() == output.getItem())) ret.add(recipe);
+        }
+        return ret;
+    }
+
+    public ArrayList<DrawableRecipe> getRecipesWith(ArrayList<DrawableRecipe> recipes, ItemStack stack) {
+        ArrayList<DrawableRecipe> ret = new ArrayList<DrawableRecipe>();
+        for (DrawableRecipe recipe : recipes)
+            for (ItemStack input : recipe.getInput())
+                if (input != null)
+                    if (input.isItemEqual(stack) || (input.getItemDamage() == OreDictionary.WILDCARD_VALUE && input.getItem() == stack.getItem())) {
+                        ret.add(recipe);
+                        break;
+                    }
         return ret;
     }
 
     public void openRecipeState(ItemStack stack) {
+        if(state != null && state instanceof StateRecipe) {
+            StateRecipe r = (StateRecipe) state;
+            if (r.cmd.equals("recipe") && r.arg instanceof ItemStack)
+                if (((ItemStack) r.arg).isItemEqual(stack)) return;
+        }
+        if(state != null && state.lastState instanceof StateRecipe) {
+            StateRecipe r = (StateRecipe) state.lastState;
+            if (r.cmd.equals("recipe") && r.arg instanceof ItemStack)
+                if (((ItemStack) r.arg).isItemEqual(stack)){
+                    state = state.lastState;
+                    return;
+                }
+        }
+
         LinkedHashMap<RecipeHandler, ArrayList<DrawableRecipe>> handlers = new LinkedHashMap<RecipeHandler, ArrayList<DrawableRecipe>>();
         for (Map.Entry<RecipeHandler, ArrayList<DrawableRecipe>> entry : RecipeManager.loadedRecipes.entrySet()){
             ArrayList<DrawableRecipe> recipes = getRecipesFor(entry.getValue(), stack);
             if(recipes.size() > 0) handlers.put(entry.getKey(), recipes);
         }
 
-        if(handlers.size() > 0) state = new StateRecipe(state, handlers);
+        if(handlers.size() > 0) state = new StateRecipe(state, handlers, "recipe", stack);
     }
 
+    public void openUsageState(ItemStack stack) {
+        if(state != null && state instanceof StateRecipe) {
+            StateRecipe r = (StateRecipe) state;
+            if (r.cmd.equals("usage") && r.arg instanceof ItemStack)
+                if (((ItemStack) r.arg).isItemEqual(stack)) return;
+        }
+        if(state != null && state.lastState instanceof StateRecipe) {
+            StateRecipe r = (StateRecipe) state.lastState;
+            if (r.cmd.equals("usage") && r.arg instanceof ItemStack)
+                if (((ItemStack) r.arg).isItemEqual(stack)){
+                    state = state.lastState;
+                    return;
+                }
+        }
+
+        LinkedHashMap<RecipeHandler, ArrayList<DrawableRecipe>> handlers = new LinkedHashMap<RecipeHandler, ArrayList<DrawableRecipe>>();
+        for (Map.Entry<RecipeHandler, ArrayList<DrawableRecipe>> entry : RecipeManager.loadedRecipes.entrySet()){
+            ArrayList<DrawableRecipe> recipes = getRecipesWith(entry.getValue(), stack);
+            if(recipes.size() > 0) handlers.put(entry.getKey(), recipes);
+        }
+
+        if(handlers.size() > 0) state = new StateRecipe(state, handlers, "usage", stack);
+    }
+
+    public void openHandlerUsageState(RecipeHandler handler) {
+        if(state != null && state instanceof StateRecipe) {
+            StateRecipe r = (StateRecipe) state;
+            if (r.cmd.equals("recipe") && r.arg == handler) return;
+        }
+        if(state != null && state.lastState instanceof StateRecipe) {
+            StateRecipe r = (StateRecipe) state.lastState;
+            if (r.cmd.equals("recipe") && r.arg == handler){
+                state = state.lastState;
+                return;
+            }
+        }
+
+        LinkedHashMap<RecipeHandler, ArrayList<DrawableRecipe>> handlers = new LinkedHashMap<RecipeHandler, ArrayList<DrawableRecipe>>();
+        handlers.put(handler, RecipeManager.loadedRecipes.get(handler));
+        state = new StateRecipe(state, handlers, "usage", handler);
+    }
 
     public RenderItem getRenderItem() { return itemRender; }
     public FontRenderer getFontRenderer() { return fontRendererObj; }
@@ -385,7 +476,19 @@ public class GuideBookGui extends GuiContainer {
         left = (width - bookImageWidth) / 2;
         top = (height - bookImageHeight) / 2;
 
-        state = new StateHome(null);
+
+        if(onOpenCmd != null && onOpenArg != null) {
+            if (onOpenCmd.equals("recipe") ) {
+                if (onOpenArg instanceof ItemStack) openRecipeState((ItemStack) onOpenArg);
+            } else if (onOpenCmd.equals("usage")) {
+                if (onOpenArg instanceof ItemStack) openUsageState((ItemStack) onOpenArg);
+                else if (onOpenArg instanceof RecipeHandler) openHandlerUsageState((RecipeHandler) onOpenArg);
+            }
+
+            onOpenCmd = null;
+            onOpenArg = null;
+        }
+        else state = new StateHome();
     }
 
     @Override

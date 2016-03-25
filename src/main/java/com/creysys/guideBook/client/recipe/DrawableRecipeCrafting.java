@@ -9,6 +9,7 @@ import net.minecraft.item.crafting.ShapedRecipes;
 import net.minecraft.item.crafting.ShapelessRecipes;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
+import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 
@@ -71,19 +72,20 @@ public class DrawableRecipeCrafting extends DrawableRecipe {
 
     public ItemStack output;
     public ItemStack[] input;
-    public int widht;
+    public int width;
 
     public DrawableRecipeCrafting(ItemStack output, ItemStack[] input, int width) {
         this.output = output.copy();
-
         this.input = new ItemStack[input.length];
         for(int i = 0; i < input.length; i++){
             if(input[i] != null) this.input[i] = input[i].copy();
-
-            //Check for wildcard damage 32767
-            if(this.input[i] != null && this.input[i].getItemDamage() == 32767) this.input[i].setItemDamage(0);
         }
-        this.widht = width;
+        this.width = width;
+    }
+
+    @Override
+    public ItemStack[] getInput() {
+        return input;
     }
 
     @Override
@@ -105,8 +107,8 @@ public class DrawableRecipeCrafting extends DrawableRecipe {
 
     @Override
     public void mouseClick(GuideBookGui gui, int pageRecipeIndex, int mouseX, int mouseY, int mouseButton) {
-        if(pageRecipeIndex == 0) clickRecipe(gui, gui.left + 38,  gui.top + 14, mouseX, mouseY);
-        else if(pageRecipeIndex == 1) clickRecipe(gui, gui.left + 38,  gui.top + 94, mouseX, mouseY);
+        if(pageRecipeIndex == 0) clickRecipe(gui, gui.left + 38,  gui.top + 14, mouseX, mouseY, mouseButton);
+        else if(pageRecipeIndex == 1) clickRecipe(gui, gui.left + 38,  gui.top + 94, mouseX, mouseY, mouseButton);
     }
 
 
@@ -115,37 +117,30 @@ public class DrawableRecipeCrafting extends DrawableRecipe {
         RenderHelper.disableStandardItemLighting();
         gui.drawTexturedModalRect(left, top, 0, 0, 112, 54);
 
-        RenderHelper.enableGUIStandardItemLighting();
-        gui.getRenderItem().renderItemAndEffectIntoGUI(output, left + 91, top + 19);
-        gui.getRenderItem().renderItemOverlayIntoGUI(gui.getFontRenderer(), output, left + 91, top + 19, null);
-        for(int i = 0; i < input.length; i++) {
-            if(input[i] != null) {
-                gui.getRenderItem().renderItemAndEffectIntoGUI(input[i], left + (i % widht) * 18 + 1, top + i / widht * 18 + 1);
-            }
-        }
+        drawItemStack(gui, output, left + 91, top + 19, true);
+        for(int i = 0; i < input.length; i++)
+            if(input[i] != null)
+                drawItemStack(gui, input[i], left + (i % width) * 18 + 1, top + i / width * 18 + 1, false);
     }
 
     public void drawRecipeTooltip(GuideBookGui gui, int left, int top, int mouseX, int mouseY) {
-        if(left + 91 < mouseX && mouseX < left + 91 + 18 && top + 19 < mouseY && mouseY < top + 19 + 18) {
-            gui.drawHoveringString(output.getDisplayName(), mouseX, mouseY);
-            return;
-        }
-
+        drawItemStackTooltip(gui, output, left + 91, top + 19, mouseX, mouseY);
         for(int i = 0; i < input.length; i++) {
             if(input[i] != null) {
-                int x = left + (i % widht) * 18 + 1;
-                int y = top + i / widht * 18 + 1;
-                if(x < mouseX && mouseX < x + 18 && y < mouseY && mouseY < y + 18) gui.drawHoveringString(input[i].getDisplayName(), mouseX, mouseY);
+                int x = left + (i % width) * 18 + 1;
+                int y = top + i / width * 18 + 1;
+                drawItemStackTooltip(gui, input[i], x, y, mouseX, mouseY);
             }
         }
     }
 
-    public void clickRecipe(GuideBookGui gui, int left, int top, int mouseX, int mouseY) {
+    public void clickRecipe(GuideBookGui gui, int left, int top, int mouseX, int mouseY, int mouseButton) {
+        clickItemStack(gui, output,left + 91, top + 19, mouseX, mouseY, mouseButton);
         for(int i = 0; i < input.length; i++) {
             if(input[i] != null) {
-                int x = left + (i % widht) * 18 + 1;
-                int y = top + i / widht * 18 + 1;
-                if(x < mouseX && mouseX < x + 18 && y < mouseY && mouseY < y + 18) gui.openRecipeState(input[i]);
+                int x = left + (i % width) * 18 + 1;
+                int y = top + i / width * 18 + 1;
+                clickItemStack(gui, input[i], x, y, mouseX, mouseY, mouseButton);
             }
         }
     }

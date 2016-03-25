@@ -1,3 +1,7 @@
+key.categories.guideBook=Guide Book
+key.guideBook.recipe=Show recipes of item
+key.guideBook.usage=Show usages of item
+
 item.guideBook.name=Guide Book
 
 guideBook.search=Search

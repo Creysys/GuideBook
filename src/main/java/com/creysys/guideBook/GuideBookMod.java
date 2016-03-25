@@ -11,6 +11,7 @@ import com.creysys.guideBook.common.items.GuideBook;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
@@ -23,6 +24,7 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.network.IGuiHandler;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.oredict.OreDictionary;
 
 @Mod(modid = GuideBookMod.MODID, version = GuideBookMod.VERSION)
 public class GuideBookMod
@@ -74,14 +76,15 @@ public class GuideBookMod
         RecipeManager.registerHandler(new RecipeHandlerSmelting());
 
         guideBook = new GuideBook();
-
         GameRegistry.addShapedRecipe(new ItemStack(guideBook), "b", "c", 'b', Items.book, 'c', Blocks.crafting_table);
 
-        MinecraftForge.EVENT_BUS.register(new PlayerEventHandler());
+        proxy.registerHandlers();
     }
 
     @EventHandler
-    public void init(FMLInitializationEvent event) {
+    public void init(FMLInitializationEvent event)
+    {
+        proxy.registerKeyBinds();
         proxy.registerModels();
     }
 

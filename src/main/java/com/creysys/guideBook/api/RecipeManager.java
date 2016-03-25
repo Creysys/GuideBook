@@ -30,4 +30,18 @@ public class RecipeManager {
         for (ArrayList<DrawableRecipe> recipes : loadedRecipes.values())
             for (DrawableRecipe recipe : recipes) if(!containsItemStack(craftableItems, recipe.getOutput())) craftableItems.add(recipe.getOutput());
     }
+
+    public static boolean hasRecipes(ItemStack stack) {
+        for (ItemStack s : craftableItems)
+            if (s != null && s.isItemEqual(stack)) return true;
+        return false;
+    }
+
+    public static boolean hasUsages(ItemStack stack) {
+        for (ArrayList<DrawableRecipe> recipes : loadedRecipes.values())
+            for (DrawableRecipe recipe : recipes)
+                for (ItemStack s : recipe.getInput())
+                    if (s != null && s.isItemEqual(stack)) return true;
+        return false;
+    }
 }
