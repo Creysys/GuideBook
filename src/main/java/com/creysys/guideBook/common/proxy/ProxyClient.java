@@ -3,6 +3,7 @@ package com.creysys.guideBook.common.proxy;
 import com.creysys.guideBook.GuideBookMod;
 import com.creysys.guideBook.client.ClientPlayerHandler;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.audio.Sound;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraftforge.common.MinecraftForge;

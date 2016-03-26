@@ -1,30 +1,40 @@
 package com.creysys.guideBook.api;
 
 import net.minecraft.item.ItemStack;
-import org.apache.commons.lang3.ArrayUtils;
+import net.minecraft.nbt.NBTUtil;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 /**
  * Created by Creysys on 21 Mar 16.
  */
-public class RecipeManager {
+public final class RecipeManager {
     public static ArrayList<RecipeHandler> handlers = new ArrayList<RecipeHandler>();
-    public static HashMap<RecipeHandler, ArrayList<DrawableRecipe>> loadedRecipes;
+    public static LinkedHashMap<RecipeHandler, ArrayList<DrawableRecipe>> loadedRecipes;
     public static ArrayList<ItemStack> craftableItems;
 
     public static void registerHandler(RecipeHandler handler) { handlers.add(handler); }
 
+    public static boolean equalNBT(ItemStack stack0, ItemStack stack1) {
+        if(stack0.hasTagCompound() != stack1.hasTagCompound()) return false;
+        if(!stack0.hasTagCompound()) return true;
+        return NBTUtil.areNBTEquals(stack0.getTagCompound(), stack1.getTagCompound(), false);
+    }
+
+    public static boolean equalItems(ItemStack stack0, ItemStack stack1) {
+        if(stack0 == null ||stack1 == null) return false;
+        return stack0.isItemEqual(stack1) && equalNBT(stack0, stack1);
+    }
+
     public static boolean containsItemStack(ArrayList<ItemStack> list, ItemStack stack) {
-        for (ItemStack s : list) if (s.isItemEqual(stack)) return true;
+        for (ItemStack s : list) if (equalItems(s, stack)) return true;
         return false;
     }
 
     public static void load() {
-        loadedRecipes = new HashMap<RecipeHandler, ArrayList<DrawableRecipe>>();
-        for (int i = handlers.size() - 1; i >= 0; i--) loadedRecipes.put(handlers.get(i), handlers.get(i).getRecipes());
+        loadedRecipes = new LinkedHashMap<RecipeHandler, ArrayList<DrawableRecipe>>();
+        for (RecipeHandler handler : handlers) loadedRecipes.put(handler, handler.getRecipes());
 
         craftableItems = new ArrayList<ItemStack>();
         for (ArrayList<DrawableRecipe> recipes : loadedRecipes.values())
@@ -33,7 +43,7 @@ public class RecipeManager {
 
     public static boolean hasRecipes(ItemStack stack) {
         for (ItemStack s : craftableItems)
-            if (s != null && s.isItemEqual(stack)) return true;
+            if (equalItems(s, stack)) return true;
         return false;
     }
 
@@ -41,7 +51,7 @@ public class RecipeManager {
         for (ArrayList<DrawableRecipe> recipes : loadedRecipes.values())
             for (DrawableRecipe recipe : recipes)
                 for (ItemStack s : recipe.getInput())
-                    if (s != null && s.isItemEqual(stack)) return true;
+                    if (equalItems(s, stack)) return true;
         return false;
     }
 }

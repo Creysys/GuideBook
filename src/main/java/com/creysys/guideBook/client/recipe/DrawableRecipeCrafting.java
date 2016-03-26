@@ -9,7 +9,6 @@ import net.minecraft.item.crafting.ShapedRecipes;
 import net.minecraft.item.crafting.ShapelessRecipes;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
-import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 
@@ -115,7 +114,7 @@ public class DrawableRecipeCrafting extends DrawableRecipe {
     public void drawRecipe(GuideBookGui gui, int left, int top) {
         gui.mc.getTextureManager().bindTexture(craftingGridTexture);
         RenderHelper.disableStandardItemLighting();
-        gui.drawTexturedModalRect(left, top, 0, 0, 112, 54);
+        gui.drawModalRectWithCustomSizedTexture(left, top, 0, 0, 112, 54, 112, 54);
 
         drawItemStack(gui, output, left + 91, top + 19, true);
         for(int i = 0; i < input.length; i++)

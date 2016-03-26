@@ -2,10 +2,11 @@ package com.creysys.guideBook.client.recipe;
 
 import com.creysys.guideBook.api.DrawableRecipe;
 import com.creysys.guideBook.client.GuideBookGui;
+import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.oredict.OreDictionary;
 
 /**
  * Created by Creysys on 21 Mar 16.
@@ -13,15 +14,14 @@ import net.minecraftforge.oredict.OreDictionary;
 public class DrawableRecipeSmelting extends DrawableRecipe {
 
     public static final ResourceLocation smeltingGridTexture = new ResourceLocation("guidebook", "textures/gui/smeltingGrid.png");
+    public static final ItemStack coal = new ItemStack(Items.coal);
 
     private ItemStack input;
     private ItemStack output;
-    private int ticks;
 
     public DrawableRecipeSmelting(ItemStack input, ItemStack output) {
         this.input = input.copy();
         this.output = output.copy();
-        this.ticks = 0;
     }
 
     @Override
@@ -56,25 +56,28 @@ public class DrawableRecipeSmelting extends DrawableRecipe {
     public void drawRecipe(GuideBookGui gui, int left, int top) {
         gui.mc.getTextureManager().bindTexture(smeltingGridTexture);
         RenderHelper.disableStandardItemLighting();
-        gui.drawTexturedModalRect(left, top, 0, 0, 82, 54);
+        Gui.drawModalRectWithCustomSizedTexture(left, top, 0, 0, 82, 54, 105, 54);
 
         int j = ticks / 12 % 14;
-        gui.drawTexturedModalRect(left + 2, top + 21 + j, 0, 77 + j, 13 ,14 - j);
+        Gui.drawModalRectWithCustomSizedTexture(left + 2, top + 20 + j, 83, 29 + j, 13 ,14 - j, 105, 54);
 
-        j = ticks / 6 % 22;
-        gui.drawTexturedModalRect(left + 25, top + 19, 0, 56, j, 15);
+        j = ticks / 6 % 23;
+        Gui.drawModalRectWithCustomSizedTexture(left + 25, top + 19, 83, 8, j, 16, 105, 54);
 
         drawItemStack(gui, input, left + 1, top + 1, false);
-        drawItemStack(gui, output, left + 60, top + 18, true);
+        drawItemStack(gui, output, left + 61, top + 19, true);
+        drawItemStack(gui, coal, left + 1, top + 37, false);
     }
 
     public void drawRecipeTooltip(GuideBookGui gui, int left, int top, int mouseX, int mouseY) {
         drawItemStackTooltip(gui, input, left + 1, top + 1, mouseX, mouseY);
         drawItemStackTooltip(gui, output, left + 60, top + 18, mouseX, mouseY);
+        drawItemStackTooltip(gui, coal, left + 1, top + 37, mouseX, mouseY);
     }
 
     public void clickRecipe(GuideBookGui gui, int left, int top, int mouseX, int mouseY, int mouseButton) {
         clickItemStack(gui, input, left + 1, top + 1, mouseX, mouseY, mouseButton);
         clickItemStack(gui, output, left + 60, top + 18, mouseX, mouseY, mouseButton);
+        clickItemStack(gui, coal, left + 1, top + 37, mouseX, mouseY, mouseButton);
     }
 }

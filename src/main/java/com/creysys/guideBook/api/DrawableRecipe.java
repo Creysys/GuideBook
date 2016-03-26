@@ -1,6 +1,7 @@
 package com.creysys.guideBook.api;
 
 import com.creysys.guideBook.client.GuideBookGui;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
@@ -50,7 +51,7 @@ public abstract class DrawableRecipe {
             }
         }
 
-        if(x < mouseX && mouseX < x + 18 && y < mouseY && mouseY < y + 18) gui.drawHoveringString(stack.getDisplayName(), mouseX, mouseY);
+        if(x < mouseX && mouseX < x + 18 && y < mouseY && mouseY < y + 18) gui.drawHoveringText(stack.getTooltip(Minecraft.getMinecraft().thePlayer, false), mouseX, mouseY);
     }
 
     public void clickItemStack(GuideBookGui gui, ItemStack stack, int x, int y, int mouseX, int mouseY, int mouseButton) {

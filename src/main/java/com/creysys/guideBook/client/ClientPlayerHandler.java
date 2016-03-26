@@ -5,6 +5,7 @@ import com.creysys.guideBook.api.RecipeManager;
 import com.creysys.guideBook.common.proxy.ProxyClient;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.event.GuiScreenEvent;
@@ -15,10 +16,16 @@ import org.lwjgl.input.Keyboard;
  * Created by Creysys on 25 Mar 16.
  */
 public class ClientPlayerHandler {
+
     public boolean playerHasBook() {
-        for (ItemStack stack : Minecraft.getMinecraft().thePlayer.inventory.mainInventory) {
+        InventoryPlayer inventory = Minecraft.getMinecraft().thePlayer.inventory;
+        if(inventory.player.isCreative() || inventory.player.getEntityData().getBoolean("doesntNeedGuideBook")) return true;
+        if(inventory.offHandInventory[0] != null && inventory.offHandInventory[0].getItem() == GuideBookMod.guideBook) return true;
+
+        for (ItemStack stack : inventory.mainInventory) {
             if(stack != null && stack.getItem() == GuideBookMod.guideBook) return true;
         }
+
         return false;
     }
 
