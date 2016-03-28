@@ -108,8 +108,11 @@ public class GuideBookGui extends GuiContainer {
             searchResult = new ArrayList<ItemStack>();
             for (ItemStack stack : RecipeManager.craftableItems) {
                 if(stack == null) continue;
+                
                 String displayName = stack.getDisplayName();
-                if(displayName != null && displayName.toLowerCase().contains(pattern) && !RecipeManager.containsItemStack(searchResult, stack)) searchResult.add(stack);
+                if(displayName == null) continue;
+                
+                if(displayName.toLowerCase().contains(pattern) && !RecipeManager.containsItemStack(searchResult, stack)) searchResult.add(stack);
             }
 
             Collections.sort(searchResult, new Comparator<ItemStack>() {
