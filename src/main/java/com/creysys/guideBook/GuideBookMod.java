@@ -1,9 +1,11 @@
 package com.creysys.guideBook;
 
+import com.creysys.guideBook.api.ItemInfoManager;
 import com.creysys.guideBook.api.RecipeManager;
 import com.creysys.guideBook.client.GuideBookGui;
 import com.creysys.guideBook.client.recipe.handler.RecipeHandlerBrewing;
 import com.creysys.guideBook.client.recipe.handler.RecipeHandlerCrafting;
+import com.creysys.guideBook.client.recipe.handler.RecipeHandlerInfo;
 import com.creysys.guideBook.client.recipe.handler.RecipeHandlerSmelting;
 import com.creysys.guideBook.common.GuiBookContainer;
 import com.creysys.guideBook.common.items.ItemGuideBook;
@@ -24,7 +26,7 @@ import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 
-@Mod(modid = GuideBookMod.MODID, version = GuideBookMod.VERSION)
+@Mod(modid = GuideBookMod.MODID, version = GuideBookMod.VERSION, dependencies = "required-after:Forge@[12.16.0.1805,);")
 public class GuideBookMod
 {
     public static class GuiId {
@@ -74,6 +76,9 @@ public class GuideBookMod
             RecipeManager.registerHandler(new RecipeHandlerCrafting());
             RecipeManager.registerHandler(new RecipeHandlerSmelting());
             RecipeManager.registerHandler(new RecipeHandlerBrewing());
+
+            ItemInfoManager.setItemInfo(Blocks.stone, 0, "guideBook.info.stone");
+            ItemInfoManager.setItemInfo(Blocks.log, "guideBook.info.log");
         }
 
         guideBook = new ItemGuideBook();
@@ -90,5 +95,10 @@ public class GuideBookMod
     }
 
     @EventHandler
-    public void postIinit(FMLPostInitializationEvent event) { if(event.getSide() == Side.CLIENT) RecipeManager.load(); }
+    public void postIinit(FMLPostInitializationEvent event) {
+        if(event.getSide() == Side.CLIENT){
+            RecipeManager.registerHandler(new RecipeHandlerInfo());
+            RecipeManager.load();
+        }
+    }
 }

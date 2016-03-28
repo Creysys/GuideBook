@@ -4,6 +4,7 @@ import com.creysys.guideBook.api.DrawableRecipe;
 import com.creysys.guideBook.api.RecipeHandler;
 import com.creysys.guideBook.api.RecipeManager;
 import com.creysys.guideBook.common.GuiBookContainer;
+import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.FontRenderer;
@@ -15,7 +16,9 @@ import net.minecraft.init.SoundEvents;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.util.text.translation.I18n;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.oredict.OreDictionary;
 
 import java.io.IOException;
@@ -104,7 +107,9 @@ public class GuideBookGui extends GuiContainer {
             String pattern = searchBar.getText().toLowerCase();
             searchResult = new ArrayList<ItemStack>();
             for (ItemStack stack : RecipeManager.craftableItems) {
-                if(stack.getDisplayName().toLowerCase().contains(pattern) && !RecipeManager.containsItemStack(searchResult, stack)) searchResult.add(stack);
+                if(stack == null) continue;
+                String displayName = stack.getDisplayName();
+                if(displayName != null && displayName.toLowerCase().contains(pattern) && !RecipeManager.containsItemStack(searchResult, stack)) searchResult.add(stack);
             }
 
             Collections.sort(searchResult, new Comparator<ItemStack>() {
@@ -208,11 +213,11 @@ public class GuideBookGui extends GuiContainer {
         @Override
         public void buttonClicked(int id) {
             if(id == 0 && page > 0){
-                Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.ui_button_click, 1.0F));
+                playPageSound();
                 page--;
             }
             if(id == 1 && (searchResult != null && searchResult.size() > page * 36 + 36)) {
-                Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.ui_button_click, 1.0F));
+                playPageSound();
                 page++;
             }
         }
@@ -252,6 +257,18 @@ public class GuideBookGui extends GuiContainer {
         }
 
 
+        public void drawTabIcon(RecipeHandler h, int x, int y) {
+            Object o = h.getTabIcon();
+            if(o instanceof Item) o = new ItemStack((Item)o);
+            else if(o instanceof Block) o = new ItemStack((Block)o);
+
+            if(o instanceof ItemStack) itemRender.renderItemAndEffectIntoGUI((ItemStack)o, x, y);
+            else if(o instanceof ResourceLocation) {
+                mc.getTextureManager().bindTexture((ResourceLocation)o);
+                drawScaledCustomSizeModalRect(x, y, 0, 0, 16, 16, 16, 16, 16, 16);
+            }
+        }
+
         @Override
         public void draw(int mouseX, int mouseY) {
             Map.Entry<RecipeHandler, ArrayList<DrawableRecipe>> tab = getTab();
@@ -267,17 +284,18 @@ public class GuideBookGui extends GuiContainer {
                 int x = left + 155;
                 int y = top + 8 + i * 22;
 
-                mc.getTextureManager().bindTexture(bookGuiTextures);
                 if(h == handler ) {
+                    mc.getTextureManager().bindTexture(bookGuiTextures);
                     RenderHelper.disableStandardItemLighting();
                     drawTexturedModalRect(x, y, 3, 233, 20, 22);
                     RenderHelper.enableGUIStandardItemLighting();
-                    itemRender.renderItemAndEffectIntoGUI(h.getTabIcon(), x + 1, y + 3);
+                    drawTabIcon(h, x + 1, y + 3);
                 } else{
+                    mc.getTextureManager().bindTexture(bookGuiTextures);
                     RenderHelper.disableStandardItemLighting();
                     drawTexturedModalRect(x, y, 26, 233, 22, 22);
                     RenderHelper.enableGUIStandardItemLighting();
-                    itemRender.renderItemAndEffectIntoGUI(h.getTabIcon(), x + 3, y + 3);
+                    drawTabIcon(h, x + 3, y + 3);
                 }
 
                 i++;
@@ -353,7 +371,7 @@ public class GuideBookGui extends GuiContainer {
                 mc.getTextureManager().bindTexture(bookGuiTextures);
                 if (x < mouseX && mouseX < x + 20 && y < mouseY && mouseY < y + 22) {
                     if(mouseButton == 0 && h != handler) {
-                        Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.ui_button_click, 1.0F));
+                        playButtonSound();
                         this.tab = i;
                         this.page = 0;
                         break;
@@ -375,17 +393,18 @@ public class GuideBookGui extends GuiContainer {
             ArrayList<DrawableRecipe> recipes = tab.getValue();
 
             if(id == 0 && page > 0){
-                Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.ui_button_click, 1.0F));
+                playPageSound();
                 page--;
             }
             if(id == 1 && recipes.size() > page * handler.recipesPerPage() + handler.recipesPerPage()) {
-                Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.ui_button_click, 1.0F));
+                playPageSound();
                 page++;
             }
         }
     }
 
     public static final ResourceLocation bookGuiTextures = new ResourceLocation("guidebook", "textures/gui/guideBook.png");
+    public static final ResourceLocation openBookSound = new ResourceLocation("guidebook", "openBook");
     public static final int bookImageWidth = 192;
     public static final int bookImageHeight = 192;
 
@@ -405,7 +424,7 @@ public class GuideBookGui extends GuiContainer {
         ArrayList<DrawableRecipe> ret = new ArrayList<DrawableRecipe>();
         for (DrawableRecipe recipe : recipes){
             ItemStack output = recipe.getOutput();
-            if(RecipeManager.equalItems(stack, output) || (stack.getItemDamage() == OreDictionary.WILDCARD_VALUE && stack.getItem() == output.getItem())) ret.add(recipe);
+            if(RecipeManager.equalItems(stack, output) || (output.getItemDamage() == OreDictionary.WILDCARD_VALUE && stack.getItem() == output.getItem())) ret.add(recipe);
         }
         return ret;
     }
@@ -432,7 +451,7 @@ public class GuideBookGui extends GuiContainer {
             StateRecipe r = (StateRecipe) state.lastState;
             if (r.cmd.equals("recipe") && r.arg instanceof ItemStack)
                 if (RecipeManager.equalItems((ItemStack)r.arg, stack)){
-                    Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.ui_button_click, 1.0F));
+                    playButtonSound();
                     state = state.lastState;
                     return;
                 }
@@ -445,7 +464,7 @@ public class GuideBookGui extends GuiContainer {
         }
 
         if(handlers.size() > 0){
-            Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.ui_button_click, 1.0F));
+            playButtonSound();
             state = new StateRecipe(state, handlers, "recipe", stack);
         }
     }
@@ -460,7 +479,7 @@ public class GuideBookGui extends GuiContainer {
             StateRecipe r = (StateRecipe) state.lastState;
             if (r.cmd.equals("usage") && r.arg instanceof ItemStack)
                 if (RecipeManager.equalItems((ItemStack)r.arg, stack)){
-                    Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.ui_button_click, 1.0F));
+                    playButtonSound();
                     state = state.lastState;
                     return;
                 }
@@ -473,7 +492,7 @@ public class GuideBookGui extends GuiContainer {
         }
 
         if(handlers.size() > 0){
-            Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.ui_button_click, 1.0F));
+            playButtonSound();
             state = new StateRecipe(state, handlers, "usage", stack);
         }
     }
@@ -486,7 +505,7 @@ public class GuideBookGui extends GuiContainer {
         if(state != null && state.lastState instanceof StateRecipe) {
             StateRecipe r = (StateRecipe) state.lastState;
             if (r.cmd.equals("recipe") && r.arg == handler){
-                Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.ui_button_click, 1.0F));
+                playButtonSound();
                 state = state.lastState;
                 return;
             }
@@ -495,7 +514,7 @@ public class GuideBookGui extends GuiContainer {
         LinkedHashMap<RecipeHandler, ArrayList<DrawableRecipe>> handlers = new LinkedHashMap<RecipeHandler, ArrayList<DrawableRecipe>>();
         handlers.put(handler, RecipeManager.loadedRecipes.get(handler));
 
-        Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.ui_button_click, 1.0F));
+        playButtonSound();
         state = new StateRecipe(state, handlers, "usage", handler);
     }
 
@@ -503,6 +522,13 @@ public class GuideBookGui extends GuiContainer {
     public FontRenderer getFontRenderer() { return fontRendererObj; }
     public void drawHoveringText(List<String> lines, int x, int y) { super.drawHoveringText(lines, x, y); }
     public void drawHoveringString(String s, int x, int y) { drawHoveringText(Arrays.asList(s), x, y); }
+    public void playButtonSound() {
+        Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.ui_button_click, 1.0F));
+    }
+    public void playPageSound() {
+        float pitch = mc.theWorld.rand.nextFloat() % 0.4f + 0.6f;
+        mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(new SoundEvent(openBookSound), pitch));
+    }
 
     @Override
     public void initGui() {
@@ -524,8 +550,6 @@ public class GuideBookGui extends GuiContainer {
             onOpenArg = null;
         }
         else state = new StateHome();
-
-        //TODO: play openBook sound
     }
 
     @Override
@@ -569,17 +593,15 @@ public class GuideBookGui extends GuiContainer {
         if (state.keyTyped(typedChar, keyCode)) return;
 
         if (keyCode == 1) {
-            Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.ui_button_click, 1.0F));
             if (state instanceof StateRecipe) {
                 state = new StateHome();
             } else this.mc.thePlayer.closeScreen();
         } else if (keyCode == 14) {
             if (state.lastState != null) {
-                Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.ui_button_click, 1.0F));
+                playPageSound();
                 state = state.lastState;
             }
         } else if (keyCode == this.mc.gameSettings.keyBindInventory.getKeyCode()) {
-            Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.ui_button_click, 1.0F));
             this.mc.thePlayer.closeScreen();
         }
     }
@@ -595,7 +617,7 @@ public class GuideBookGui extends GuiContainer {
             int y = top - 6;
 
             if(x < mouseX && mouseX < x + 18 && y < mouseY && mouseY < y + 10) {
-                Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.ui_button_click, 1.0F));
+                playButtonSound();
                 state = state.lastState;
             }
         }

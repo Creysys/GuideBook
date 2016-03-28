@@ -32,8 +32,8 @@ public class RecipeHandlerBrewing extends RecipeHandler {
     }
 
     @Override
-    public ItemStack getTabIcon() {
-        return new ItemStack(Items.brewing_stand);
+    public Object getTabIcon() {
+        return Items.brewing_stand;
     }
 
     @Override

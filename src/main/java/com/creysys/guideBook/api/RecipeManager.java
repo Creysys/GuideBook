@@ -2,6 +2,7 @@ package com.creysys.guideBook.api;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTUtil;
+import net.minecraftforge.oredict.OreDictionary;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -38,7 +39,7 @@ public final class RecipeManager {
 
         craftableItems = new ArrayList<ItemStack>();
         for (ArrayList<DrawableRecipe> recipes : loadedRecipes.values())
-            for (DrawableRecipe recipe : recipes) if(!containsItemStack(craftableItems, recipe.getOutput())) craftableItems.add(recipe.getOutput());
+            for (DrawableRecipe recipe : recipes) if(recipe.getOutput().getItemDamage() != OreDictionary.WILDCARD_VALUE && !containsItemStack(craftableItems, recipe.getOutput())) craftableItems.add(recipe.getOutput());
     }
 
     public static boolean hasRecipes(ItemStack stack) {

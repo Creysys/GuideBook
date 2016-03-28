@@ -20,8 +20,8 @@ public class RecipeHandlerCrafting extends RecipeHandler {
     }
 
     @Override
-    public ItemStack getTabIcon() {
-        return new ItemStack(Blocks.crafting_table);
+    public Object getTabIcon() {
+        return Blocks.crafting_table;
     }
 
     @Override

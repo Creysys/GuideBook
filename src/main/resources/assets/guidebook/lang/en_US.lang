@@ -11,3 +11,7 @@ guideBook.back=Back
 guideBook.crafting=Crafting
 guideBook.smelting=Smelting
 guideBook.brewing=Brewing
+guideBook.info=Info
+
+guideBook.info.stone=You can find stone everywhere\nunder the ground.
+guideBook.info.log=You can punch trees for logs.

@@ -1,7 +1,5 @@
 package com.creysys.guideBook.api;
 
-import net.minecraft.item.ItemStack;
-
 import java.util.ArrayList;
 
 /**
@@ -9,7 +7,7 @@ import java.util.ArrayList;
  */
 public abstract class RecipeHandler {
     public abstract String getName();
-    public abstract ItemStack getTabIcon();
+    public abstract Object getTabIcon();
     public abstract int recipesPerPage();
     public abstract ArrayList<DrawableRecipe> getRecipes();
 }
