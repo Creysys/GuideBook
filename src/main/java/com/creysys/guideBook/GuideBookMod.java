@@ -10,11 +10,14 @@ import com.creysys.guideBook.client.recipe.handler.RecipeHandlerSmelting;
 import com.creysys.guideBook.common.GuiBookContainer;
 import com.creysys.guideBook.common.items.ItemGuideBook;
 import com.creysys.guideBook.common.proxy.ProxyServer;
+import com.creysys.guideBook.plugin.PluginThaumcraft;
+import com.creysys.guideBook.plugin.PluginVanilla;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.SidedProxy;
@@ -73,13 +76,11 @@ public class GuideBookMod
         NetworkRegistry.INSTANCE.registerGuiHandler(instance, guiHandler);
 
         if(event.getSide() == Side.CLIENT) {
-            RecipeManager.registerHandler(new RecipeHandlerCrafting());
-            RecipeManager.registerHandler(new RecipeHandlerSmelting());
-            RecipeManager.registerHandler(new RecipeHandlerBrewing());
+            PluginVanilla.preInit();
 
-            ItemInfoManager.setItemInfo(Blocks.stone, 0, "guideBook.info.stone");
-            ItemInfoManager.setItemInfo(Blocks.log, "guideBook.info.log");
+            if(Loader.isModLoaded("thaumcraft")) PluginThaumcraft.preInit();
         }
+
 
         guideBook = new ItemGuideBook();
         GameRegistry.addShapedRecipe(new ItemStack(guideBook), "b", "c", 'b', Items.book, 'c', Blocks.crafting_table);
@@ -97,7 +98,7 @@ public class GuideBookMod
     @EventHandler
     public void postIinit(FMLPostInitializationEvent event) {
         if(event.getSide() == Side.CLIENT){
-            RecipeManager.registerHandler(new RecipeHandlerInfo());
+            PluginVanilla.postInit();
             RecipeManager.load();
         }
     }

@@ -2,21 +2,62 @@ package com.creysys.guideBook.client.recipe;
 
 import com.creysys.guideBook.api.DrawableRecipe;
 import com.creysys.guideBook.client.GuideBookGui;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.translation.I18n;
-import org.lwjgl.opengl.GL11;
+
+import java.util.ArrayList;
 
 /**
  * Created by Creysys on 27 Mar 16.
  */
 public class DrawableRecipeInfo extends DrawableRecipe {
+    public static final ResourceLocation bigSlotTexture = new ResourceLocation("guideBook", "textures/gui/bigSlot.png");
+
     public ItemStack stack;
-    public String localizationKey;
+    public String[] lines;
+
+    public String makeLine(ArrayList<String> list) {
+        String ret = "";
+        for(String word : list) {
+            if(ret.equals("")) ret = word;
+            else ret += " " + word;
+        }
+        return ret;
+    }
 
     public DrawableRecipeInfo(ItemStack stack, String localizationKey) {
         this.stack = stack.copy();
-        this.localizationKey = localizationKey;
+
+        FontRenderer fontRenderer = Minecraft.getMinecraft().fontRendererObj;
+        String[] words = I18n.translateToLocal(localizationKey).split(" ");
+
+        final int maxLineWIdth = 120;
+        int currentLineWidth = 0;
+
+        ArrayList<String> linesList = new ArrayList<String>();
+        ArrayList<String> currentLine = new ArrayList<String>();
+
+        for(String word : words) {
+            int wordWidth = fontRenderer.getStringWidth(word + " ");
+            if(currentLineWidth + wordWidth > maxLineWIdth || word.equals("\\n")) {
+                linesList.add(makeLine(currentLine));
+                currentLine.clear();
+                currentLineWidth = 0;
+            }
+
+            if(!word.equals("\\n")){
+                currentLine.add(word);
+                currentLineWidth += wordWidth;
+            }
+        }
+
+        linesList.add(makeLine(currentLine));
+        lines = linesList.toArray(new String[0]);
     }
 
     @Override
@@ -31,7 +72,9 @@ public class DrawableRecipeInfo extends DrawableRecipe {
 
     @Override
     public void draw(GuideBookGui gui, int pageRecipeIndex) {
-        drawItemStack(gui, stack, gui.left + 85, gui.top + 4, false);
+        gui.mc.getTextureManager().bindTexture(bigSlotTexture);
+        Gui.drawScaledCustomSizeModalRect(gui.left + 80, gui.top, 0, 0, 26, 26, 26, 26, 26, 26);
+        drawItemStack(gui, stack, gui.left + 85, gui.top + 5, false);
     }
 
     @Override
@@ -39,13 +82,7 @@ public class DrawableRecipeInfo extends DrawableRecipe {
         drawItemStackTooltip(gui, stack, gui.left + 85, gui.top, mouseX, mouseY);
 
         RenderHelper.disableStandardItemLighting();
-        GL11.glPushMatrix();
-        float scale = 0.75f;
-        GL11.glScalef(scale, scale, 1);
-        String[] lines = I18n.translateToLocal(localizationKey).split("\\\\n");
-        for(int i = 0; i < lines.length; i++)
-            gui.getFontRenderer().drawString(lines[i], gui.left + 94, gui.top + 50 + i * 10, 0xFF000000);
-        GL11.glPopMatrix();
+        for(int i = 0; i < lines.length; i++) gui.getFontRenderer().drawString(lines[i], gui.left + 35, gui.top + 34 + i * 10, 0xFF000000);
     }
 
     @Override

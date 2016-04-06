@@ -552,7 +552,10 @@ public class GuideBookGui extends GuiContainer {
             onOpenCmd = null;
             onOpenArg = null;
         }
-        else state = new StateHome();
+        else {
+            state = new StateHome();
+            playPageSound();
+        }
     }
 
     @Override
@@ -601,7 +604,7 @@ public class GuideBookGui extends GuiContainer {
             } else this.mc.thePlayer.closeScreen();
         } else if (keyCode == 14) {
             if (state.lastState != null) {
-                playPageSound();
+                playButtonSound();
                 state = state.lastState;
             }
         } else if (keyCode == this.mc.gameSettings.keyBindInventory.getKeyCode()) {
