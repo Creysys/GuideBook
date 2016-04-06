@@ -1,17 +1,12 @@
 package com.creysys.guideBook;
 
-import com.creysys.guideBook.api.ItemInfoManager;
 import com.creysys.guideBook.api.RecipeManager;
 import com.creysys.guideBook.client.GuideBookGui;
-import com.creysys.guideBook.client.recipe.handler.RecipeHandlerBrewing;
-import com.creysys.guideBook.client.recipe.handler.RecipeHandlerCrafting;
-import com.creysys.guideBook.client.recipe.handler.RecipeHandlerInfo;
-import com.creysys.guideBook.client.recipe.handler.RecipeHandlerSmelting;
 import com.creysys.guideBook.common.GuiBookContainer;
 import com.creysys.guideBook.common.items.ItemGuideBook;
 import com.creysys.guideBook.common.proxy.ProxyServer;
 import com.creysys.guideBook.plugin.PluginThaumcraft;
-import com.creysys.guideBook.plugin.PluginVanilla;
+import com.creysys.guideBook.plugin.vanilla.PluginVanilla;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;

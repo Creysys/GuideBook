@@ -21,11 +21,10 @@ public class ItemGuideBook extends Item {
         String name = "guideBook";
 
         setUnlocalizedName(name);
-        setRegistryName(name);
         setMaxStackSize(1);
         setCreativeTab(CreativeTabs.tabMisc);
 
-        GameRegistry.registerItem(this);
+        GameRegistry.registerItem(this, name);
     }
 
 
