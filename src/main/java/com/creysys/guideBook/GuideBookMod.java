@@ -5,6 +5,7 @@ import com.creysys.guideBook.client.GuideBookGui;
 import com.creysys.guideBook.common.GuiBookContainer;
 import com.creysys.guideBook.common.items.ItemGuideBook;
 import com.creysys.guideBook.common.proxy.ProxyServer;
+import com.creysys.guideBook.network.message.MessagePutItemsInWorkbench;
 import com.creysys.guideBook.plugin.PluginThaumcraft;
 import com.creysys.guideBook.plugin.vanilla.PluginVanilla;
 import net.minecraft.entity.player.EntityPlayer;
@@ -21,6 +22,7 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.network.IGuiHandler;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
+import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 
@@ -61,6 +63,7 @@ public class GuideBookMod
     @Mod.Instance
     public static GuideBookMod instance;
 
+    public static SimpleNetworkWrapper network;
     public final GuiHandler guiHandler = new GuiHandler();
 
     @SidedProxy(serverSide = "com.creysys.guideBook.common.proxy.ProxyServer", clientSide = "com.creysys.guideBook.common.proxy.ProxyClient")
@@ -68,6 +71,9 @@ public class GuideBookMod
 
     @EventHandler
     public void preInit(FMLPreInitializationEvent event) {
+        network = NetworkRegistry.INSTANCE.newSimpleChannel(MODID);
+        network.registerMessage(MessagePutItemsInWorkbench.Handler.class, MessagePutItemsInWorkbench.class, 0, Side.SERVER);
+
         NetworkRegistry.INSTANCE.registerGuiHandler(instance, guiHandler);
 
         if(event.getSide() == Side.CLIENT) {

@@ -11,6 +11,7 @@ import java.util.ArrayList;
 public final class ItemStackHelper {
     public static ArrayList<ItemStack> getSubItems(ItemStack stack) {
         ArrayList<ItemStack> ret = new ArrayList<ItemStack>();
+        if(stack == null) return ret;
 
         if(stack.getItemDamage() == OreDictionary.WILDCARD_VALUE) {
             if (stack.getHasSubtypes()) {

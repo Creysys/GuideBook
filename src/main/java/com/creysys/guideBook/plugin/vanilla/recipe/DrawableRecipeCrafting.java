@@ -1,9 +1,11 @@
 package com.creysys.guideBook.plugin.vanilla.recipe;
 
+import com.creysys.guideBook.GuideBookMod;
 import com.creysys.guideBook.api.DrawableRecipe;
 import com.creysys.guideBook.api.RecipeManager;
 import com.creysys.guideBook.client.GuideBookGui;
 import com.creysys.guideBook.common.helpers.ItemStackHelper;
+import com.creysys.guideBook.network.message.MessagePutItemsInWorkbench;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GlStateManager;
@@ -22,6 +24,7 @@ import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -126,7 +129,7 @@ public class DrawableRecipeCrafting extends DrawableRecipe {
         else if(pageRecipeIndex == 1) clickRecipe(gui, gui.left + 38,  gui.top + 94, mouseX, mouseY, mouseButton);
     }
 
-    private boolean canPutItemsInWorkbench() {
+    private BlockPos findNearbyWorkbench() {
         World world = Minecraft.getMinecraft().theWorld;
         EntityPlayer player = Minecraft.getMinecraft().thePlayer;
 
@@ -138,30 +141,33 @@ public class DrawableRecipeCrafting extends DrawableRecipe {
         for(int x = posX - range; x <= posX + range; x++)
             for(int y = posY - range; y <= posY + range; y++)
                 for(int z = posZ - range; z <= posZ + range; z++) {
-                    if(world.getBlockState(new BlockPos(x, y, z)).getBlock() == Blocks.crafting_table) return true;
+                    BlockPos pos = new BlockPos(x, y, z);
+                    if(world.getBlockState(pos).getBlock() == Blocks.crafting_table) return pos;
                 }
 
-        return false;
+        return null;
     }
 
-    private boolean containsItem(ItemStack[] inventory, ItemStack stack) {
-        if (stack == null) return true;
+    public boolean containsItem(ItemStack[] inventory, ItemStack stack, ArrayList<Integer> used) {
+        if (stack == null){
+            used.add(null);
+            return true;
+        }
 
-        for (ItemStack itemStack : inventory)
+        for (int i = 0; i < inventory.length; i++)
             for (ItemStack subItem : ItemStackHelper.getSubItems(stack))
-                if (RecipeManager.equalItems(itemStack, subItem) && itemStack.stackSize > 0) {
-                    itemStack.stackSize--;
+                if (RecipeManager.equalItems(inventory[i], subItem) && inventory[i].stackSize > 0) {
+                    inventory[i].stackSize--;
+                    used.add(i);
                     return true;
                 }
         return false;
     }
 
-    private ArrayList<Integer> canPlayerCraft(ItemStack[] inventory){
-        ArrayList<Integer> ret = new ArrayList<Integer>();
-
-        for (int i = 0; i < input.length; i++)
-            if(!containsItem(inventory, input[i])) ret.add(i);
-        return ret;
+    public void canPlayerCraft(ItemStack[] inventory, ArrayList<Integer> missing, ArrayList<Integer> used){
+        for (int i = 0; i < input.length; i++) {
+            if (!containsItem(inventory, input[i], used)) missing.add(i);
+        }
     }
 
     private void putItemsInWorkbench() {
@@ -173,10 +179,28 @@ public class DrawableRecipeCrafting extends DrawableRecipe {
             else inventory[i] = stack.copy();
         }
 
-        ArrayList<Integer> missing = canPlayerCraft(inventory);
-        if(missing.size() == 0){
+        ArrayList<Integer> missing = new ArrayList<Integer>();
+        ArrayList<Integer> used = new ArrayList<Integer>();
 
-        } else {
+        canPlayerCraft(inventory, missing, used);
+
+        ArrayList<Integer> usedConverted = new ArrayList<Integer>();
+
+        int slot = 0;
+        for (Integer integer : used) {
+            while(slot % 3 >= width) {
+                usedConverted.add(null);
+                slot++;
+            }
+
+            usedConverted.add(integer);
+            slot++;
+        }
+
+        if(missing.size() == 0){
+            GuideBookMod.network.sendToServer(new MessagePutItemsInWorkbench(usedConverted.toArray(new Integer[0])));
+        }
+        else {
             this.missing = missing;
             this.flashUntil = ticks + 20;
         }
@@ -195,7 +219,7 @@ public class DrawableRecipeCrafting extends DrawableRecipe {
     }
 
     private void drawRecipeTooltip(GuideBookGui gui, int left, int top, int mouseX, int mouseY) {
-        if(canPutItemsInWorkbench()) {
+        if(findNearbyWorkbench() != null) {
             int x1 = left + 58;
             int y1 = top + 37;
 
@@ -232,7 +256,7 @@ public class DrawableRecipeCrafting extends DrawableRecipe {
     }
 
     private void clickRecipe(GuideBookGui gui, int left, int top, int mouseX, int mouseY, int mouseButton) {
-        if(canPutItemsInWorkbench() && mouseButton == 0) {
+        if(findNearbyWorkbench() != null && mouseButton == 0) {
             int x1 = left + 58;
             int y1 = top + 37;
 
