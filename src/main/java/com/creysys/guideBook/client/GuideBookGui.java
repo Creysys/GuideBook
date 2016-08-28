@@ -1,6 +1,7 @@
 package com.creysys.guideBook.client;
 
 import com.creysys.guideBook.api.DrawableRecipe;
+import com.creysys.guideBook.api.IGuiAccessor;
 import com.creysys.guideBook.api.RecipeHandler;
 import com.creysys.guideBook.api.RecipeManager;
 import com.creysys.guideBook.common.GuiBookContainer;
@@ -8,6 +9,7 @@ import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.RenderHelper;
@@ -31,7 +33,7 @@ import java.util.*;
 /**
  * Created by Creysys on 20 Mar 16.
  */
-public class GuideBookGui extends GuiContainer {
+public class GuideBookGui extends GuiContainer implements IGuiAccessor {
 
     public abstract class State {
         public class GuiButton {
@@ -549,7 +551,10 @@ public class GuideBookGui extends GuiContainer {
 
     public RenderItem getRenderItem() { return itemRender; }
     public FontRenderer getFontRenderer() { return fontRendererObj; }
-    public void drawHoveringText(List<String> lines, int x, int y) { super.drawHoveringText(lines, x, y); }
+    public Minecraft getMc(){return mc;}
+    public int getLeft(){return left;}
+    public int getTop(){return top;}
+    public void drawHoveringStrings(List<String> lines, int x, int y) { super.drawHoveringText(lines, x, y); }
     public void drawHoveringString(String s, int x, int y) { drawHoveringText(Arrays.asList(s), x, y); }
     public void playButtonSound() {
         Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1.0F));

@@ -1,7 +1,7 @@
 package com.creysys.guideBook.plugin.vanilla.recipe;
 
 import com.creysys.guideBook.api.DrawableRecipe;
-import com.creysys.guideBook.client.GuideBookGui;
+import com.creysys.guideBook.api.IGuiAccessor;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
@@ -71,22 +71,22 @@ public class DrawableRecipeInfo extends DrawableRecipe {
     }
 
     @Override
-    public void draw(GuideBookGui gui, int pageRecipeIndex) {
-        gui.mc.getTextureManager().bindTexture(bigSlotTexture);
-        Gui.drawScaledCustomSizeModalRect(gui.left + 80, gui.top, 0, 0, 26, 26, 26, 26, 26, 26);
-        drawItemStack(gui, stack, gui.left + 85, gui.top + 5, false);
+    public void draw(IGuiAccessor gui, int pageRecipeIndex) {
+        gui.getMc().getTextureManager().bindTexture(bigSlotTexture);
+        Gui.drawScaledCustomSizeModalRect(gui.getLeft() + 80, gui.getTop(), 0, 0, 26, 26, 26, 26, 26, 26);
+        drawItemStack(gui, stack, gui.getLeft() + 85, gui.getTop() + 5, false);
     }
 
     @Override
-    public void drawForeground(GuideBookGui gui, int pageRecipeIndex, int mouseX, int mouseY) {
-        drawItemStackTooltip(gui, stack, gui.left + 85, gui.top, mouseX, mouseY);
+    public void drawForeground(IGuiAccessor gui, int pageRecipeIndex, int mouseX, int mouseY) {
+        drawItemStackTooltip(gui, stack, gui.getLeft() + 85, gui.getTop(), mouseX, mouseY);
 
         RenderHelper.disableStandardItemLighting();
-        for(int i = 0; i < lines.length; i++) gui.getFontRenderer().drawString(lines[i], gui.left + 35, gui.top + 34 + i * 10, 0xFF000000);
+        for(int i = 0; i < lines.length; i++) gui.getFontRenderer().drawString(lines[i], gui.getLeft() + 35, gui.getTop() + 34 + i * 10, 0xFF000000);
     }
 
     @Override
-    public void mouseClick(GuideBookGui gui, int pageRecipeIndex, int mouseX, int mouseY, int mouseButton) {
-        clickItemStack(gui, stack, gui.left + 85, gui.top, mouseX, mouseY, mouseButton);
+    public void mouseClick(IGuiAccessor gui, int pageRecipeIndex, int mouseX, int mouseY, int mouseButton) {
+        clickItemStack(gui, stack, gui.getLeft() + 85, gui.getTop(), mouseX, mouseY, mouseButton);
     }
 }

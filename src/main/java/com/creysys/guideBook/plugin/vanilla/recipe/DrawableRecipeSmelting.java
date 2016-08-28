@@ -1,7 +1,7 @@
 package com.creysys.guideBook.plugin.vanilla.recipe;
 
 import com.creysys.guideBook.api.DrawableRecipe;
-import com.creysys.guideBook.client.GuideBookGui;
+import com.creysys.guideBook.api.IGuiAccessor;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.init.Items;
@@ -35,26 +35,26 @@ public class DrawableRecipeSmelting extends DrawableRecipe {
     }
 
     @Override
-    public void draw(GuideBookGui gui, int pageRecipeIndex) {
-        if(pageRecipeIndex == 0) drawRecipe(gui, gui.left + 48,  gui.top + 14);
-        else if(pageRecipeIndex == 1) drawRecipe(gui, gui.left + 48,  gui.top + 94);
+    public void draw(IGuiAccessor gui, int pageRecipeIndex) {
+        if(pageRecipeIndex == 0) drawRecipe(gui, gui.getLeft() + 48,  gui.getTop() + 14);
+        else if(pageRecipeIndex == 1) drawRecipe(gui, gui.getLeft() + 48,  gui.getTop() + 94);
     }
 
     @Override
-    public void drawForeground(GuideBookGui gui, int pageRecipeIndex, int mouseX, int mouseY) {
-        if(pageRecipeIndex == 0) drawRecipeTooltip(gui, gui.left + 48,  gui.top + 14, mouseX, mouseY);
-        else if(pageRecipeIndex == 1) drawRecipeTooltip(gui, gui.left + 48,  gui.top + 94, mouseX, mouseY);
+    public void drawForeground(IGuiAccessor gui, int pageRecipeIndex, int mouseX, int mouseY) {
+        if(pageRecipeIndex == 0) drawRecipeTooltip(gui, gui.getLeft() + 48,  gui.getTop() + 14, mouseX, mouseY);
+        else if(pageRecipeIndex == 1) drawRecipeTooltip(gui, gui.getLeft() + 48,  gui.getTop() + 94, mouseX, mouseY);
     }
 
     @Override
-    public void mouseClick(GuideBookGui gui, int pageRecipeIndex, int mouseX, int mouseY, int mouseButton) {
-        if(pageRecipeIndex == 0) clickRecipe(gui, gui.left + 48,  gui.top + 14, mouseX, mouseY, mouseButton);
-        else if(pageRecipeIndex == 1) clickRecipe(gui, gui.left + 48,  gui.top + 94, mouseX, mouseY, mouseButton);
+    public void mouseClick(IGuiAccessor gui, int pageRecipeIndex, int mouseX, int mouseY, int mouseButton) {
+        if(pageRecipeIndex == 0) clickRecipe(gui, gui.getLeft() + 48,  gui.getTop() + 14, mouseX, mouseY, mouseButton);
+        else if(pageRecipeIndex == 1) clickRecipe(gui, gui.getLeft() + 48,  gui.getTop() + 94, mouseX, mouseY, mouseButton);
     }
 
 
-    public void drawRecipe(GuideBookGui gui, int left, int top) {
-        gui.mc.getTextureManager().bindTexture(smeltingGridTexture);
+    public void drawRecipe(IGuiAccessor gui, int left, int top) {
+        gui.getMc().getTextureManager().bindTexture(smeltingGridTexture);
         RenderHelper.disableStandardItemLighting();
         Gui.drawModalRectWithCustomSizedTexture(left, top, 0, 0, 82, 54, 105, 54);
 
@@ -69,13 +69,13 @@ public class DrawableRecipeSmelting extends DrawableRecipe {
         drawItemStack(gui, coal, left + 1, top + 37, false);
     }
 
-    public void drawRecipeTooltip(GuideBookGui gui, int left, int top, int mouseX, int mouseY) {
+    public void drawRecipeTooltip(IGuiAccessor gui, int left, int top, int mouseX, int mouseY) {
         drawItemStackTooltip(gui, input, left + 1, top + 1, mouseX, mouseY);
         drawItemStackTooltip(gui, output, left + 60, top + 18, mouseX, mouseY);
         drawItemStackTooltip(gui, coal, left + 1, top + 37, mouseX, mouseY);
     }
 
-    public void clickRecipe(GuideBookGui gui, int left, int top, int mouseX, int mouseY, int mouseButton) {
+    public void clickRecipe(IGuiAccessor gui, int left, int top, int mouseX, int mouseY, int mouseButton) {
         clickItemStack(gui, input, left + 1, top + 1, mouseX, mouseY, mouseButton);
         clickItemStack(gui, output, left + 60, top + 18, mouseX, mouseY, mouseButton);
         clickItemStack(gui, coal, left + 1, top + 37, mouseX, mouseY, mouseButton);

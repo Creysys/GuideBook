@@ -2,8 +2,8 @@ package com.creysys.guideBook.plugin.vanilla.recipe;
 
 import com.creysys.guideBook.GuideBookMod;
 import com.creysys.guideBook.api.DrawableRecipe;
+import com.creysys.guideBook.api.IGuiAccessor;
 import com.creysys.guideBook.api.RecipeManager;
-import com.creysys.guideBook.client.GuideBookGui;
 import com.creysys.guideBook.common.helpers.ItemStackHelper;
 import com.creysys.guideBook.network.message.MessagePutItemsInWorkbench;
 import net.minecraft.client.Minecraft;
@@ -112,21 +112,21 @@ public class DrawableRecipeCrafting extends DrawableRecipe {
     }
 
     @Override
-    public void draw(GuideBookGui gui, int pageRecipeIndex) {
-        if(pageRecipeIndex == 0) drawRecipe(gui, gui.left + 38,  gui.top + 14);
-        else if(pageRecipeIndex == 1) drawRecipe(gui, gui.left + 38,  gui.top + 94);
+    public void draw(IGuiAccessor gui, int pageRecipeIndex) {
+        if(pageRecipeIndex == 0) drawRecipe(gui, gui.getLeft() + 38,  gui.getTop() + 14);
+        else if(pageRecipeIndex == 1) drawRecipe(gui, gui.getLeft() + 38,  gui.getTop() + 94);
     }
 
     @Override
-    public void drawForeground(GuideBookGui gui, int pageRecipeIndex, int mouseX, int mouseY) {
-        if(pageRecipeIndex == 0) drawRecipeTooltip(gui, gui.left + 38,  gui.top + 14, mouseX, mouseY);
-        else if(pageRecipeIndex == 1) drawRecipeTooltip(gui, gui.left + 38,  gui.top + 94, mouseX, mouseY);
+    public void drawForeground(IGuiAccessor gui, int pageRecipeIndex, int mouseX, int mouseY) {
+        if(pageRecipeIndex == 0) drawRecipeTooltip(gui, gui.getLeft() + 38,  gui.getTop() + 14, mouseX, mouseY);
+        else if(pageRecipeIndex == 1) drawRecipeTooltip(gui, gui.getLeft() + 38,  gui.getTop() + 94, mouseX, mouseY);
     }
 
     @Override
-    public void mouseClick(GuideBookGui gui, int pageRecipeIndex, int mouseX, int mouseY, int mouseButton) {
-        if(pageRecipeIndex == 0) clickRecipe(gui, gui.left + 38,  gui.top + 14, mouseX, mouseY, mouseButton);
-        else if(pageRecipeIndex == 1) clickRecipe(gui, gui.left + 38,  gui.top + 94, mouseX, mouseY, mouseButton);
+    public void mouseClick(IGuiAccessor gui, int pageRecipeIndex, int mouseX, int mouseY, int mouseButton) {
+        if(pageRecipeIndex == 0) clickRecipe(gui, gui.getLeft() + 38,  gui.getTop() + 14, mouseX, mouseY, mouseButton);
+        else if(pageRecipeIndex == 1) clickRecipe(gui, gui.getLeft() + 38,  gui.getTop() + 94, mouseX, mouseY, mouseButton);
     }
 
     private BlockPos findNearbyWorkbench() {
@@ -206,8 +206,8 @@ public class DrawableRecipeCrafting extends DrawableRecipe {
         }
     }
 
-    private void drawRecipe(GuideBookGui gui, int left, int top) {
-        gui.mc.getTextureManager().bindTexture(craftingGridTexture);
+    private void drawRecipe(IGuiAccessor gui, int left, int top) {
+        gui.getMc().getTextureManager().bindTexture(craftingGridTexture);
         RenderHelper.disableStandardItemLighting();
         Gui.drawModalRectWithCustomSizedTexture(left, top, 0, 0, 112, 54, 126, 54);
 
@@ -218,13 +218,13 @@ public class DrawableRecipeCrafting extends DrawableRecipe {
 
     }
 
-    private void drawRecipeTooltip(GuideBookGui gui, int left, int top, int mouseX, int mouseY) {
+    private void drawRecipeTooltip(IGuiAccessor gui, int left, int top, int mouseX, int mouseY) {
         if(findNearbyWorkbench() != null) {
             int x1 = left + 58;
             int y1 = top + 37;
 
             RenderHelper.disableStandardItemLighting();
-            gui.mc.getTextureManager().bindTexture(craftingGridTexture);
+            gui.getMc().getTextureManager().bindTexture(craftingGridTexture);
             if (x1 < mouseX && mouseX < x1 + 12 && y1 < mouseY && mouseY < y1 + 12) {
                 Gui.drawModalRectWithCustomSizedTexture(x1, y1, 112, 14, 14, 14, 126, 54);
                 gui.drawHoveringString(I18n.translateToLocal("guideBook.putInWorkbench"), mouseX, mouseY);
@@ -240,7 +240,7 @@ public class DrawableRecipeCrafting extends DrawableRecipe {
                 GlStateManager.disableDepth();
                 GlStateManager.enableAlpha();
                 GlStateManager.enableBlend();
-                gui.mc.getTextureManager().bindTexture(craftingGridTexture);
+                gui.getMc().getTextureManager().bindTexture(craftingGridTexture);
                 Gui.drawModalRectWithCustomSizedTexture(x, y, 112, 28, 14, 14, 126, 54);
             }
         }
@@ -255,7 +255,7 @@ public class DrawableRecipeCrafting extends DrawableRecipe {
         }
     }
 
-    private void clickRecipe(GuideBookGui gui, int left, int top, int mouseX, int mouseY, int mouseButton) {
+    private void clickRecipe(IGuiAccessor gui, int left, int top, int mouseX, int mouseY, int mouseButton) {
         if(findNearbyWorkbench() != null && mouseButton == 0) {
             int x1 = left + 58;
             int y1 = top + 37;
