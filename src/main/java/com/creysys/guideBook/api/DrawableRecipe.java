@@ -7,6 +7,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Creysys on 21 Mar 16.
@@ -15,6 +16,10 @@ public abstract class DrawableRecipe {
     public int ticks = 0;
 
     public void update() { ticks++; }
+
+    public void drawOres(GuideBookGui gui, List<ItemStack> ores, int x, int y, boolean showAmount){
+
+    }
 
     public void drawItemStack(GuideBookGui gui, ItemStack stack, int x, int y, boolean showAmount) {
         if(stack.getItemDamage() == OreDictionary.WILDCARD_VALUE) {
@@ -54,6 +59,10 @@ public abstract class DrawableRecipe {
         if(x < mouseX && mouseX < x + 18 && y < mouseY && mouseY < y + 18) gui.drawHoveringText(stack.getTooltip(Minecraft.getMinecraft().thePlayer, false), mouseX, mouseY);
     }
 
+    public void drawOresTooltip(GuideBookGui gui, List<ItemStack> ores, int x, int y, int mouseX, int mouseY) {
+
+    }
+
     public void clickItemStack(GuideBookGui gui, ItemStack stack, int x, int y, int mouseX, int mouseY, int mouseButton) {
         if(stack.getItemDamage() == OreDictionary.WILDCARD_VALUE) {
             if (stack.getHasSubtypes()) {
@@ -73,6 +82,10 @@ public abstract class DrawableRecipe {
             if(mouseButton == 0) gui.openRecipeState(stack);
             else if(mouseButton == 1) gui.openUsageState(stack);
         }
+    }
+
+    public void clickOres(GuideBookGui gui, List<ItemStack> ores, int x, int y, int mouseX, int mouseY, int mouseButton) {
+
     }
 
     public abstract ItemStack[] getInput();

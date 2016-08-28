@@ -22,13 +22,13 @@ public class RecipeHandlerCrafting extends RecipeHandler {
     }
 
     public void addTippedArrowRecipes(ArrayList<DrawableRecipe> list) {
-        ItemStack arrow = new ItemStack(Items.arrow);
+        ItemStack arrow = new ItemStack(Items.ARROW);
 
-        for (PotionType type : PotionType.potionTypeRegistry) {
-            ItemStack input = new ItemStack(Items.lingering_potion);
+        for (PotionType type : PotionType.REGISTRY) {
+            ItemStack input = new ItemStack(Items.LINGERING_POTION);
             PotionUtils.addPotionToItemStack(input, type);
 
-            ItemStack output = new ItemStack(Items.tipped_arrow, 8);
+            ItemStack output = new ItemStack(Items.TIPPED_ARROW, 8);
             PotionUtils.addPotionToItemStack(output, type);
 
             list.add(new DrawableRecipeCrafting(output, new ItemStack[]{arrow, arrow, arrow, arrow, input, arrow, arrow, arrow, arrow}, 3));
@@ -42,7 +42,7 @@ public class RecipeHandlerCrafting extends RecipeHandler {
 
     @Override
     public Object getTabIcon() {
-        return Blocks.crafting_table;
+        return Blocks.CRAFTING_TABLE;
     }
 
     @Override

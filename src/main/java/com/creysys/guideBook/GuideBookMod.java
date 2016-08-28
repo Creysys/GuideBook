@@ -26,7 +26,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 
-@Mod(modid = GuideBookMod.MODID, version = GuideBookMod.VERSION, dependencies = "required-after:Forge@[12.16.0.1805,);")
+@Mod(modid = GuideBookMod.MODID, version = GuideBookMod.VERSION, dependencies = "required-after:Forge@[12.17.0.1910,);")
 public class GuideBookMod
 {
     public static class GuiId {
@@ -56,7 +56,7 @@ public class GuideBookMod
     }
 
     public static final String MODID = "guideBook";
-    public static final String VERSION = "1.0";
+    public static final String VERSION = "1.6.1";
 
     public static ItemGuideBook guideBook;
 
@@ -84,7 +84,7 @@ public class GuideBookMod
 
 
         guideBook = new ItemGuideBook();
-        GameRegistry.addShapedRecipe(new ItemStack(guideBook), "b", "c", 'b', Items.book, 'c', Blocks.crafting_table);
+        GameRegistry.addShapedRecipe(new ItemStack(guideBook), "b", "c", 'b', Items.BOOK, 'c', Blocks.CRAFTING_TABLE);
 
         proxy.registerHandlers();
     }

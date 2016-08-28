@@ -33,7 +33,7 @@ public class RecipeHandlerBrewing extends RecipeHandler {
 
     @Override
     public Object getTabIcon() {
-        return Items.brewing_stand;
+        return Items.BREWING_STAND;
     }
 
     @Override
@@ -60,7 +60,11 @@ public class RecipeHandlerBrewing extends RecipeHandler {
             fieldMeta.setAccessible(true);
 
             for (Object o : list) {
+                if(!o.getClass().getName().equals("net.minecraft.potion.PotionHelper$MixPredicate")) continue;
+
                 Object predicate = fieldPredicate.get(o);
+                if(!predicate.getClass().getName().equals("net.minecraft.potion.PotionHelper$ItemPredicateInstance")) continue;
+
                 Item item = (Item) fieldItem.get(predicate);
                 int meta = (Integer) fieldMeta.get(predicate);
                 if(meta == -1) meta = 0;
@@ -91,7 +95,7 @@ public class RecipeHandlerBrewing extends RecipeHandler {
         addIngredients(ingredients, itemConversions);
 
         ArrayList<ItemStack> knownPotions = new ArrayList<ItemStack>();
-        ItemStack waterBottle = PotionUtils.addPotionToItemStack(new ItemStack(Items.potionitem), PotionTypes.water);
+        ItemStack waterBottle = PotionUtils.addPotionToItemStack(new ItemStack(Items.POTIONITEM), PotionTypes.WATER);
         knownPotions.add(waterBottle);
 
         int brewingStep = 1;
@@ -120,7 +124,7 @@ public class RecipeHandlerBrewing extends RecipeHandler {
 
                 if (potionInput.getItem() == potionOutput.getItem()) {
                     PotionType potionOutputType = PotionUtils.getPotionFromItem(potionOutput);
-                    if (potionOutputType == PotionTypes.water) {
+                    if (potionOutputType == PotionTypes.WATER) {
                         continue;
                     }
 
@@ -142,6 +146,7 @@ public class RecipeHandlerBrewing extends RecipeHandler {
         return newPotions;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public ArrayList<DrawableRecipe> getRecipes() {
         ArrayList<DrawableRecipe> ret = new ArrayList<DrawableRecipe>();
@@ -153,6 +158,11 @@ public class RecipeHandlerBrewing extends RecipeHandler {
                 AbstractBrewingRecipe recipe = (AbstractBrewingRecipe) iBrewingRecipe;
                 ItemStack ingredient;
                 if (recipe.getIngredient() instanceof ItemStack) ingredient = (ItemStack) recipe.getIngredient();
+                else if (recipe.getIngredient() instanceof List) {
+                    List<ItemStack> ores = (List<ItemStack>) recipe.getIngredient();
+                    if (ores.size() == 0) continue;
+                    ingredient = ores.get(0);
+                }
                 else if (recipe.getIngredient() instanceof String) {
                     List<ItemStack> ores = OreDictionary.getOres((String) recipe.getIngredient());
                     if (ores.size() == 0) continue;

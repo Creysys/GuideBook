@@ -14,7 +14,7 @@ import net.minecraft.util.ResourceLocation;
 public class DrawableRecipeBrewing extends DrawableRecipe {
 
     public static final ResourceLocation brewingGridTexture = new ResourceLocation("guidebook", "textures/gui/brewingGrid.png");
-    public static final ItemStack blazeRod = new ItemStack(Items.blaze_powder);
+    public static final ItemStack blazeRod = new ItemStack(Items.BLAZE_POWDER);
 
     public ItemStack input;
     public ItemStack ingredient;

@@ -14,7 +14,7 @@ import net.minecraft.util.ResourceLocation;
 public class DrawableRecipeSmelting extends DrawableRecipe {
 
     public static final ResourceLocation smeltingGridTexture = new ResourceLocation("guidebook", "textures/gui/smeltingGrid.png");
-    public static final ItemStack coal = new ItemStack(Items.coal);
+    public static final ItemStack coal = new ItemStack(Items.COAL);
 
     private ItemStack input;
     private ItemStack output;

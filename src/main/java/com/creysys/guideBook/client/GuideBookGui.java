@@ -18,6 +18,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.text.translation.I18n;
+import net.minecraftforge.common.ForgeModContainer;
+import net.minecraftforge.fml.common.Loader;
+import net.minecraftforge.fml.common.ModContainer;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.OreDictionary;
 
 import java.io.IOException;
@@ -102,16 +107,37 @@ public class GuideBookGui extends GuiContainer {
             next = new GuiButton(1, left + 134, top + 150, 3, 194, 18, 10, I18n.translateToLocal("guideBook.nextPage"));
         }
 
+        private String getModName(String modId) {
+            for (ModContainer container : Loader.instance().getModList()) {
+                if(container.getModId().toLowerCase().equals(modId.toLowerCase()))
+                    return container.getName();
+            }
+            return "";
+        }
+
         private void updateSearchResult() {
             String pattern = searchBar.getText().toLowerCase();
             searchResult = new ArrayList<ItemStack>();
             for (ItemStack stack : RecipeManager.craftableItems) {
                 if(stack == null) continue;
-                
-                String displayName = stack.getDisplayName();
-                if(displayName == null) continue;
-                
-                if(displayName.toLowerCase().contains(pattern) && !RecipeManager.containsItemStack(searchResult, stack)) searchResult.add(stack);
+
+                if(pattern.startsWith("@"))
+                {
+                    String modPattern = pattern.substring(1);
+                    Item item = stack.getItem();
+                    if(item == null) continue;
+                    String itemMod = getModName(item.delegate.name().getResourceDomain());
+
+                    if (itemMod.toLowerCase().contains(modPattern) && !RecipeManager.containsItemStack(searchResult, stack))
+                        searchResult.add(stack);
+                }
+                else {
+                    String displayName = stack.getDisplayName();
+                    if(displayName == null) continue;
+
+                    if (displayName.toLowerCase().contains(pattern) && !RecipeManager.containsItemStack(searchResult, stack))
+                        searchResult.add(stack);
+                }
             }
 
             Collections.sort(searchResult, new Comparator<ItemStack>() {
@@ -426,6 +452,7 @@ public class GuideBookGui extends GuiContainer {
         ArrayList<DrawableRecipe> ret = new ArrayList<DrawableRecipe>();
         for (DrawableRecipe recipe : recipes){
             ItemStack output = recipe.getOutput();
+            if(output == null || output.getItem() == null) continue;
             if(RecipeManager.equalItems(stack, output) || (output.getItemDamage() == OreDictionary.WILDCARD_VALUE && stack.getItem() == output.getItem())) ret.add(recipe);
         }
         return ret;
@@ -435,7 +462,7 @@ public class GuideBookGui extends GuiContainer {
         ArrayList<DrawableRecipe> ret = new ArrayList<DrawableRecipe>();
         for (DrawableRecipe recipe : recipes)
             for (ItemStack input : recipe.getInput())
-                if (input != null)
+                if (input != null && input.getItem() != null)
                     if (RecipeManager.equalItems(input, stack) || (input.getItemDamage() == OreDictionary.WILDCARD_VALUE && input.getItem() == stack.getItem())) {
                         ret.add(recipe);
                         break;
@@ -525,7 +552,7 @@ public class GuideBookGui extends GuiContainer {
     public void drawHoveringText(List<String> lines, int x, int y) { super.drawHoveringText(lines, x, y); }
     public void drawHoveringString(String s, int x, int y) { drawHoveringText(Arrays.asList(s), x, y); }
     public void playButtonSound() {
-        Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.ui_button_click, 1.0F));
+        Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1.0F));
     }
     public void playPageSound() {
         float pitch = mc.theWorld.rand.nextFloat() % 0.4f + 0.6f;

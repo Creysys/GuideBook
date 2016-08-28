@@ -4,6 +4,7 @@ package com.creysys.guideBook.api;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.OreDictionary;
 
@@ -16,7 +17,7 @@ public final class ItemInfoManager {
     public static LinkedHashMap<ItemStack, String> infos = new LinkedHashMap<ItemStack, String>();
 
     public static void setBlockInfo(String mod, String name, int meta, String localizationKey){
-        Block block = GameRegistry.findBlock(mod, name);
+        Block block = GameRegistry.findRegistry(Block.class).getValue(new ResourceLocation(mod, name));
         if(block != null) setBlockInfo(block, meta, localizationKey);
     }
 

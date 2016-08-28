@@ -142,7 +142,7 @@ public class DrawableRecipeCrafting extends DrawableRecipe {
             for(int y = posY - range; y <= posY + range; y++)
                 for(int z = posZ - range; z <= posZ + range; z++) {
                     BlockPos pos = new BlockPos(x, y, z);
-                    if(world.getBlockState(pos).getBlock() == Blocks.crafting_table) return pos;
+                    if(world.getBlockState(pos).getBlock() == Blocks.CRAFTING_TABLE) return pos;
                 }
 
         return null;

@@ -39,7 +39,13 @@ public final class RecipeManager {
 
         craftableItems = new ArrayList<ItemStack>();
         for (ArrayList<DrawableRecipe> recipes : loadedRecipes.values())
-            for (DrawableRecipe recipe : recipes) if(recipe.getOutput().getItemDamage() != OreDictionary.WILDCARD_VALUE && !containsItemStack(craftableItems, recipe.getOutput())) craftableItems.add(recipe.getOutput());
+            for (DrawableRecipe recipe : recipes){
+                if(recipe == null) continue;
+                ItemStack output = recipe.getOutput();
+                if(output == null || output.getItem() == null) continue;
+                if(output.getItemDamage() != OreDictionary.WILDCARD_VALUE && !containsItemStack(craftableItems, output))
+                    craftableItems.add(output);
+            }
     }
 
     public static boolean hasRecipes(ItemStack stack) {

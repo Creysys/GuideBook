@@ -21,7 +21,7 @@ public class RecipeHandlerSmelting extends RecipeHandler {
 
     @Override
     public Object getTabIcon() {
-        return Blocks.furnace;
+        return Blocks.FURNACE;
     }
 
     @Override
