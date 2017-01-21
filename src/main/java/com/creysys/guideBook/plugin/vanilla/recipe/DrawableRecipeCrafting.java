@@ -33,7 +33,7 @@ import java.util.List;
  */
 public class DrawableRecipeCrafting extends DrawableRecipe {
 
-    public static final ResourceLocation craftingGridTexture = new ResourceLocation("guidebook", "textures/gui/craftingGrid.png");
+    public static final ResourceLocation craftingGridTexture = new ResourceLocation("guidebook", "textures/gui/craftinggrid.png");
 
     @SuppressWarnings("unchecked")
     public static DrawableRecipeCrafting parse(IRecipe recipe) {
@@ -130,8 +130,8 @@ public class DrawableRecipeCrafting extends DrawableRecipe {
     }
 
     private BlockPos findNearbyWorkbench() {
-        World world = Minecraft.getMinecraft().theWorld;
-        EntityPlayer player = Minecraft.getMinecraft().thePlayer;
+        World world = Minecraft.getMinecraft().world;
+        EntityPlayer player = Minecraft.getMinecraft().player;
 
         int range = 4;
         int posX = (int)Math.round(player.posX - .5d);
@@ -156,8 +156,8 @@ public class DrawableRecipeCrafting extends DrawableRecipe {
 
         for (int i = 0; i < inventory.length; i++)
             for (ItemStack subItem : ItemStackHelper.getSubItems(stack))
-                if (RecipeManager.equalItems(inventory[i], subItem) && inventory[i].stackSize > 0) {
-                    inventory[i].stackSize--;
+                if (RecipeManager.equalItems(inventory[i], subItem) && inventory[i].getCount() > 0) {
+                    inventory[i].setCount(inventory[i].getCount() - 1);
                     used.add(i);
                     return true;
                 }
@@ -171,10 +171,11 @@ public class DrawableRecipeCrafting extends DrawableRecipe {
     }
 
     private void putItemsInWorkbench() {
-        EntityPlayer player = Minecraft.getMinecraft().thePlayer;
-        ItemStack[] inventory = new ItemStack[player.inventory.mainInventory.length];
-        for(int i = 0; i < inventory.length; i++){
-            ItemStack stack = player.inventory.mainInventory[i];
+        EntityPlayer player = Minecraft.getMinecraft().player;
+        ItemStack[] inventory = new ItemStack[player.inventory.mainInventory.size()];
+        for(int i = 0; i < inventory.length; i++)
+        {
+            ItemStack stack = player.inventory.mainInventory.get(i);
             if(stack == null) inventory[i] = null;
             else inventory[i] = stack.copy();
         }

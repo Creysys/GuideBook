@@ -16,7 +16,7 @@ import java.util.ArrayList;
  * Created by Creysys on 27 Mar 16.
  */
 public class DrawableRecipeInfo extends DrawableRecipe {
-    public static final ResourceLocation bigSlotTexture = new ResourceLocation("guideBook", "textures/gui/bigSlot.png");
+    public static final ResourceLocation bigSlotTexture = new ResourceLocation("guidebook", "textures/gui/bigslot.png");
 
     public ItemStack stack;
     public String[] lines;

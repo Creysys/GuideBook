@@ -2,7 +2,9 @@ package com.creysys.guideBook.api;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.NonNullList;
 import net.minecraftforge.oredict.OreDictionary;
 
 import java.util.ArrayList;
@@ -23,8 +25,8 @@ public abstract class DrawableRecipe {
     public void drawItemStack(IGuiAccessor gui, ItemStack stack, int x, int y, boolean showAmount) {
         if(stack.getItemDamage() == OreDictionary.WILDCARD_VALUE) {
             if (stack.getHasSubtypes()) {
-                ArrayList<ItemStack> subItems = new ArrayList<ItemStack>();
-                stack.getItem().getSubItems(stack.getItem(), null, subItems);
+                NonNullList<ItemStack> subItems = NonNullList.<ItemStack>create();
+                stack.getItem().getSubItems(stack.getItem(), (CreativeTabs)null, subItems);
                 int index = ticks / 20 % (subItems.size());
 
                 stack = subItems.get(index);
@@ -43,8 +45,8 @@ public abstract class DrawableRecipe {
     public void drawItemStackTooltip(IGuiAccessor gui, ItemStack stack, int x, int y, int mouseX, int mouseY) {
         if(stack.getItemDamage() == OreDictionary.WILDCARD_VALUE) {
             if (stack.getHasSubtypes()) {
-                ArrayList<ItemStack> subItems = new ArrayList<ItemStack>();
-                stack.getItem().getSubItems(stack.getItem(), null, subItems);
+            	NonNullList<ItemStack> subItems = NonNullList.<ItemStack>create();
+                stack.getItem().getSubItems(stack.getItem(), (CreativeTabs)null, subItems);
                 int index = ticks / 20 % (subItems.size());
 
                 stack = subItems.get(index);
@@ -55,7 +57,7 @@ public abstract class DrawableRecipe {
             }
         }
 
-        if(x < mouseX && mouseX < x + 18 && y < mouseY && mouseY < y + 18) gui.drawHoveringStrings(stack.getTooltip(Minecraft.getMinecraft().thePlayer, false), mouseX, mouseY);
+        if(x < mouseX && mouseX < x + 18 && y < mouseY && mouseY < y + 18) gui.drawHoveringStrings(stack.getTooltip(Minecraft.getMinecraft().player, false), mouseX, mouseY);
     }
 
     public void drawOresTooltip(IGuiAccessor gui, List<ItemStack> ores, int x, int y, int mouseX, int mouseY) {
@@ -65,8 +67,8 @@ public abstract class DrawableRecipe {
     public void clickItemStack(IGuiAccessor gui, ItemStack stack, int x, int y, int mouseX, int mouseY, int mouseButton) {
         if(stack.getItemDamage() == OreDictionary.WILDCARD_VALUE) {
             if (stack.getHasSubtypes()) {
-                ArrayList<ItemStack> subItems = new ArrayList<ItemStack>();
-                stack.getItem().getSubItems(stack.getItem(), null, subItems);
+            	NonNullList<ItemStack> subItems = NonNullList.<ItemStack>create();
+                stack.getItem().getSubItems(stack.getItem(), (CreativeTabs)null, subItems);
                 int index = ticks / 20 % (subItems.size());
 
                 stack = subItems.get(index);

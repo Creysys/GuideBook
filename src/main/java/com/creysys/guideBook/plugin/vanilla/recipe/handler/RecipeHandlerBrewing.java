@@ -28,7 +28,7 @@ import java.util.List;
 public class RecipeHandlerBrewing extends RecipeHandler {
     @Override
     public String getName() {
-        return "guideBook.brewing";
+        return "guidebook.brewing";
     }
 
     @Override
@@ -124,14 +124,16 @@ public class RecipeHandlerBrewing extends RecipeHandler {
 
                 if (potionInput.getItem() == potionOutput.getItem()) {
                     PotionType potionOutputType = PotionUtils.getPotionFromItem(potionOutput);
-                    if (potionOutputType == PotionTypes.WATER) {
+                    if (potionOutputType == PotionTypes.WATER)
+                    {
                         continue;
                     }
 
                     PotionType potionInputType = PotionUtils.getPotionFromItem(potionInput);
-                    int inputId = PotionType.getID(potionInputType);
-                    int outputId = PotionType.getID(potionOutputType);
-                    if (inputId == outputId) {
+                    int inputId = PotionType.REGISTRY.getIDForObject(potionInputType);
+                    int outputId = PotionType.REGISTRY.getIDForObject(potionOutputType);
+                    if (inputId == outputId)
+                    {
                         continue;
                     }
                 }

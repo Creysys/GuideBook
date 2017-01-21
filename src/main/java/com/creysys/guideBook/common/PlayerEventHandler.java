@@ -11,7 +11,7 @@ import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 public class PlayerEventHandler {
     @SubscribeEvent
     public void firstJoin(PlayerEvent.PlayerLoggedInEvent event) {
-        if(event.player.worldObj.isRemote) return;
+        if(event.player.world.isRemote) return;
         if(!event.player.getEntityData().getBoolean("joinedBefore")) {
             event.player.getEntityData().setBoolean("joinedBefore", true);
             event.player.inventory.addItemStackToInventory(new ItemStack(GuideBookMod.guideBook));

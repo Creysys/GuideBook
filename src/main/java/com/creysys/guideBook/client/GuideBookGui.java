@@ -105,8 +105,8 @@ public class GuideBookGui extends GuiContainer implements IGuiAccessor {
             updateSearchResult();
             page = 0;
 
-            previous = new GuiButton(0, left + 28, top + 150, 3, 207, 18, 10, I18n.translateToLocal("guideBook.previousPage"));
-            next = new GuiButton(1, left + 134, top + 150, 3, 194, 18, 10, I18n.translateToLocal("guideBook.nextPage"));
+            previous = new GuiButton(0, left + 28, top + 150, 3, 207, 18, 10, I18n.translateToLocal("guidebook.previousPage"));
+            next = new GuiButton(1, left + 134, top + 150, 3, 194, 18, 10, I18n.translateToLocal("guidebook.nextPage"));
         }
 
         private String getModName(String modId) {
@@ -157,7 +157,7 @@ public class GuideBookGui extends GuiContainer implements IGuiAccessor {
 
         @Override
         public void draw(int mouseX, int mouseY) {
-            fontRendererObj.drawString(I18n.translateToLocal("guideBook.search"), left + 38, top + 10, 0xAA1111);
+            fontRendererObj.drawString(I18n.translateToLocal("guidebook.search"), left + 38, top + 10, 0xAA1111);
 
             RenderHelper.disableStandardItemLighting();
             drawRect(left + 38, top + 36, left + 38 + 110, top + 42 + 110, 0x99555555);
@@ -188,7 +188,7 @@ public class GuideBookGui extends GuiContainer implements IGuiAccessor {
                     int x = left + 40 + (i % itemsPerRow) * itemSize;
                     int y = top + 42 + i / itemsPerRow * itemSize - page * itemSize * 6;
 
-                    List<String> lines = searchResult.get(i).getTooltip(Minecraft.getMinecraft().thePlayer, false);
+                    List<String> lines = searchResult.get(i).getTooltip(Minecraft.getMinecraft().player, false);
                     if(x < mouseX && mouseX < x + itemSize && y < mouseY && mouseY < y + itemSize) drawHoveringText(lines, mouseX, mouseY);
                 }
             }
@@ -270,8 +270,8 @@ public class GuideBookGui extends GuiContainer implements IGuiAccessor {
             this.cmd = cmd;
             this.arg = arg;
 
-            previous = new GuiButton(0, left + 28, top + 150, 3, 207, 18, 10, I18n.translateToLocal("guideBook.previousPage"));
-            next = new GuiButton(1, left + 134, top + 150, 3, 194, 18, 10, I18n.translateToLocal("guideBook.nextPage"));
+            previous = new GuiButton(0, left + 28, top + 150, 3, 207, 18, 10, I18n.translateToLocal("guidebook.previousPage"));
+            next = new GuiButton(1, left + 134, top + 150, 3, 194, 18, 10, I18n.translateToLocal("guidebook.nextPage"));
         }
 
 
@@ -433,8 +433,8 @@ public class GuideBookGui extends GuiContainer implements IGuiAccessor {
         }
     }
 
-    public static final ResourceLocation bookGuiTextures = new ResourceLocation("guidebook", "textures/gui/guideBook.png");
-    public static final ResourceLocation openBookSound = new ResourceLocation("guidebook", "openBook");
+    public static final ResourceLocation bookGuiTextures = new ResourceLocation("guidebook", "textures/gui/guidebook.png");
+    public static final ResourceLocation openBookSound = new ResourceLocation("guidebook", "openbook");
     public static final int bookImageWidth = 192;
     public static final int bookImageHeight = 192;
 
@@ -560,7 +560,7 @@ public class GuideBookGui extends GuiContainer implements IGuiAccessor {
         Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1.0F));
     }
     public void playPageSound() {
-        float pitch = mc.theWorld.rand.nextFloat() % 0.4f + 0.6f;
+        float pitch = mc.world.rand.nextFloat() % 0.4f + 0.6f;
         mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(new SoundEvent(openBookSound), pitch));
     }
 
@@ -605,7 +605,7 @@ public class GuideBookGui extends GuiContainer implements IGuiAccessor {
 
             if(x < mouseX && mouseX < x + 18 && y < mouseY && mouseY < y + 10){
                 drawTexturedModalRect(x, y, 26, 220, 18, 10);
-                drawHoveringText(Arrays.asList(I18n.translateToLocal("guideBook.back")), mouseX, mouseY);
+                drawHoveringText(Arrays.asList(I18n.translateToLocal("guidebook.back")), mouseX, mouseY);
             }
             else drawTexturedModalRect(x, y, 3, 220, 18, 10);
         }
@@ -632,14 +632,14 @@ public class GuideBookGui extends GuiContainer implements IGuiAccessor {
         if (keyCode == 1) {
             if (state instanceof StateRecipe) {
                 state = new StateHome();
-            } else this.mc.thePlayer.closeScreen();
+            } else this.mc.player.closeScreen();
         } else if (keyCode == 14) {
             if (state.lastState != null) {
                 playButtonSound();
                 state = state.lastState;
             }
         } else if (keyCode == this.mc.gameSettings.keyBindInventory.getKeyCode()) {
-            this.mc.thePlayer.closeScreen();
+            this.mc.player.closeScreen();
         }
     }
 

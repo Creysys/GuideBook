@@ -30,8 +30,9 @@ public final class ItemInfoManager {
     }
 
     public static void setItemInfo(String mod, String name, int meta, String localizationKey){
-        Item item = GameRegistry.findItem(mod, name);
-        if(item != null) setItemInfo(item, meta, localizationKey);
+        Item item = Item.REGISTRY.getObject(new ResourceLocation(mod, name));
+        if(item != null) 
+        	setItemInfo(item, meta, localizationKey);
     }
 
     public static void setItemInfo(Item item, String localizationKey) {

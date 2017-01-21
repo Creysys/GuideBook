@@ -26,7 +26,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 
-@Mod(modid = GuideBookMod.MODID, version = GuideBookMod.VERSION, dependencies = "required-after:Forge@[12.17.0.1910,);")
+@Mod(modid = GuideBookMod.MODID, version = GuideBookMod.VERSION)
 public class GuideBookMod
 {
     public static class GuiId {
@@ -55,8 +55,8 @@ public class GuideBookMod
         }
     }
 
-    public static final String MODID = "guideBook";
-    public static final String VERSION = "1.6.1";
+    public static final String MODID = "guidebook";
+    public static final String VERSION = "1.7.0";
 
     public static ItemGuideBook guideBook;
 
@@ -66,7 +66,8 @@ public class GuideBookMod
     public static SimpleNetworkWrapper network;
     public final GuiHandler guiHandler = new GuiHandler();
 
-    @SidedProxy(serverSide = "com.creysys.guideBook.common.proxy.ProxyServer", clientSide = "com.creysys.guideBook.common.proxy.ProxyClient")
+    @SidedProxy(serverSide = "com.creysys.guideBook.common.proxy.ProxyServer", 
+    		clientSide = "com.creysys.guideBook.common.proxy.ProxyClient")
     public static ProxyServer proxy;
 
     @EventHandler
@@ -79,7 +80,7 @@ public class GuideBookMod
         if(event.getSide() == Side.CLIENT) {
             PluginVanilla.preInit();
 
-            if(Loader.isModLoaded("thaumcraft")) PluginThaumcraft.preInit();
+            //if(Loader.isModLoaded("thaumcraft")) PluginThaumcraft.preInit();
         }
 
 

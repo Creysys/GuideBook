@@ -18,9 +18,13 @@ import org.lwjgl.input.Keyboard;
 public class ClientPlayerHandler {
 
     public boolean playerHasBook() {
-        InventoryPlayer inventory = Minecraft.getMinecraft().thePlayer.inventory;
+        InventoryPlayer inventory = Minecraft.getMinecraft().player.inventory;
         if(inventory.player.isCreative() || inventory.player.getEntityData().getBoolean("doesntNeedGuideBook")) return true;
-        if(inventory.offHandInventory[0] != null && inventory.offHandInventory[0].getItem() == GuideBookMod.guideBook) return true;
+        
+        if(inventory.offHandInventory.contains(GuideBookMod.guideBook))
+        {
+        	return true;        	
+        }
 
         for (ItemStack stack : inventory.mainInventory) {
             if(stack != null && stack.getItem() == GuideBookMod.guideBook) return true;
@@ -38,12 +42,12 @@ public class ClientPlayerHandler {
                 if (Keyboard.getEventKey() == ProxyClient.recipeKey.getKeyCode() && RecipeManager.hasRecipes(slot.getStack())) {
                     GuideBookGui.onOpenCmd = "recipe";
                     GuideBookGui.onOpenArg = slot.getStack();
-                    Minecraft.getMinecraft().thePlayer.openGui(GuideBookMod.instance, 0, Minecraft.getMinecraft().theWorld, 0, 0, 0);
+                    Minecraft.getMinecraft().player.openGui(GuideBookMod.instance, 0, Minecraft.getMinecraft().world, 0, 0, 0);
                 }
                 else if(Keyboard.getEventKey() == ProxyClient.usageKey.getKeyCode() && RecipeManager.hasUsages(slot.getStack())) {
                     GuideBookGui.onOpenCmd = "usage";
                     GuideBookGui.onOpenArg = slot.getStack();
-                    Minecraft.getMinecraft().thePlayer.openGui(GuideBookMod.instance, 0, Minecraft.getMinecraft().theWorld, 0, 0, 0);
+                    Minecraft.getMinecraft().player.openGui(GuideBookMod.instance, 0, Minecraft.getMinecraft().world, 0, 0, 0);
                 }
             }
         }

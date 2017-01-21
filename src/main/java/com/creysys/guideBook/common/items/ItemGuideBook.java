@@ -31,11 +31,8 @@ public class ItemGuideBook extends Item {
 
 
     @Override
-    public ActionResult<ItemStack> onItemRightClick(ItemStack itemStack, World world, EntityPlayer player, EnumHand hand) {
+    public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand) {
         if(world.isRemote) player.openGui(GuideBookMod.instance, GuideBookMod.GuiId.GuideBook, world, 0, 0, 0);
-
-        return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, itemStack);
+        return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, player.getHeldItem(hand));
     }
-
-
 }

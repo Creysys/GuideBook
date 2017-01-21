@@ -14,11 +14,11 @@ import java.util.Map;
  * Created by Creysys on 27 Mar 16.
  */
 public class RecipeHandlerInfo extends RecipeHandler {
-    public static final ResourceLocation tabIcon = new ResourceLocation("guideBook", "textures/gui/infoTabIcon.png");
+    public static final ResourceLocation tabIcon = new ResourceLocation("guidebook", "textures/gui/infotabicon.png");
 
     @Override
     public String getName() {
-        return "guideBook.info";
+        return "guidebook.info";
     }
 
     @Override

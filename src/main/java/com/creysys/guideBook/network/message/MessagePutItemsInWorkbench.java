@@ -51,7 +51,7 @@ public class MessagePutItemsInWorkbench implements IMessage {
 
     public static class Handler implements IMessageHandler<MessagePutItemsInWorkbench, IMessage> {
         private static BlockPos findNearbyWorkbench(EntityPlayer player) {
-            World world = player.worldObj;
+            World world = player.world;
 
             int range = 4;
             int posX = (int)Math.round(player.posX - .5d);
@@ -86,12 +86,18 @@ public class MessagePutItemsInWorkbench implements IMessage {
                 for(int i = 0; i < used.length; i++) {
                     if(used[i] == null) continue;
 
-                    ItemStack playerStack = entityPlayer.inventory.mainInventory[used[i]];
-                    if(playerStack != null && playerStack.stackSize > 0){
+                    ItemStack playerStack = entityPlayer.inventory.mainInventory.get(used[i]);
+                    
+                    if(playerStack != null && playerStack.getCount() > 0)
+                    {
                         ItemStack stackUsed = playerStack.copy();
-                        stackUsed.stackSize = 1;
-                        playerStack.stackSize--;
-                        if(playerStack.stackSize == 0) entityPlayer.inventory.mainInventory[used[i]] = null;
+                        stackUsed.setCount(1);
+                        playerStack.setCount(playerStack.getCount() - 1);
+                        
+                        if(playerStack.getCount() == 0)
+                        {
+                        	entityPlayer.inventory.mainInventory.remove(used[i]);
+                        }
 
                         container.craftMatrix.setInventorySlotContents(i, stackUsed);
                     }
@@ -125,7 +131,7 @@ public class MessagePutItemsInWorkbench implements IMessage {
         public IMessage onMessage(final MessagePutItemsInWorkbench message, final MessageContext ctx) {
             final EntityPlayer player = ctx.getServerHandler().playerEntity;
 
-            final WorldServer mainThread = (WorldServer)player.worldObj;
+            final WorldServer mainThread = (WorldServer)player.world;
             mainThread.addScheduledTask(new Runnable() {
                 @Override
                 public void run() {

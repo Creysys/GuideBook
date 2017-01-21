@@ -16,7 +16,7 @@ import java.util.Map;
 public class RecipeHandlerSmelting extends RecipeHandler {
     @Override
     public String getName() {
-        return "guideBook.smelting";
+        return "guidebook.smelting";
     }
 
     @Override

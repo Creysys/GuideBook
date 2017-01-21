@@ -1,43 +1,43 @@
 #Keybinds
-key.categories.guideBook=Guide Book
-key.guideBook.recipe=Show recipes of item
-key.guideBook.usage=Show usages of item
+key.categories.guidebook=Guide Book
+key.guidebook.recipe=Show recipes of item
+key.guidebook.usage=Show usages of item
 
 #Items
-item.guideBook.name=Guide Book
+item.guidebook.name=Guide Book
 
 #Gui
-guideBook.search=Search
-guideBook.nextPage=Next Page
-guideBook.previousPage=Previous Page
-guideBook.back=Back
-guideBook.putInWorkbench=Put in workbench
-guideBook.crafting=Crafting
-guideBook.smelting=Smelting
-guideBook.brewing=Brewing
-guideBook.info=Info
+guidebook.search=Search
+guidebook.nextPage=Next Page
+guidebook.previousPage=Previous Page
+guidebook.back=Back
+guidebook.putInWorkbench=Put in workbench
+guidebook.crafting=Crafting
+guidebook.smelting=Smelting
+guidebook.brewing=Brewing
+guidebook.info=Info
 
 #Vanilla block infos
-guideBook.info.dispenser=§nDispenser \n \n Spits out what's inside on a redstone pulse.
-guideBook.info.noteBlock=§nNote Block \n \n Right click to tune and left click or redstone pulse to play.
-guideBook.info.poweredRail=§nPowered Rail \n \n Speeds up minecarts if a redstone signal is applied. If not it stops them.
-guideBook.info.detectorRail=§nDetector Rail \n \n Outputs a redstone signal if a minecart is on top of it.
-guideBook.info.activatorRail=§nActivator Rail \n \n Ejects entities from a minecart, blocks hopper minecarts and ignites tnt.
-guideBook.info.piston=§nPiston \n \n Pushes a block if a redstone signal is applied.
-guideBook.info.stickyPiston=§nSticky Piston \n \n Pushes a block if a redstone signal is applied and pulls it back when it retracts.
-guideBook.info.tnt=§nTNT \n \n Explodes if it gets in contact with fire or an active redstone signal.
-guideBook.info.mossyCobblestone=§nMossy Cobblestone \n \n A more uncommon type of cobblestone which can be found around mob spawners.
-guideBook.info.stonePressurePlate=§nStone Pressure Plate \n \n Emits a redstone signal if a player or a mob step on it.
-guideBook.info.woodPressurePlate=§nStone Pressure Plate \n \n Emits a redstone signal if an entity is on top of it. This includes arrows, items and more.
-guideBook.info.stoneButton=§nStone Button \n \n Emits a redstone signal if a player right clicks on it.
-guideBook.info.woodButton=§nWood Button \n \n Emits a redstone signal if a player right clicks on it or when hit by an arrow.
-guideBook.info.vines=§nVines \n \n Can be found in the jungle and will grow.
+guidebook.info.dispenser=§nDispenser \n \n Spits out what's inside on a redstone pulse.
+guidebook.info.noteBlock=§nNote Block \n \n Right click to tune and left click or redstone pulse to play.
+guidebook.info.poweredRail=§nPowered Rail \n \n Speeds up minecarts if a redstone signal is applied. If not it stops them.
+guidebook.info.detectorRail=§nDetector Rail \n \n Outputs a redstone signal if a minecart is on top of it.
+guidebook.info.activatorRail=§nActivator Rail \n \n Ejects entities from a minecart, blocks hopper minecarts and ignites tnt.
+guidebook.info.piston=§nPiston \n \n Pushes a block if a redstone signal is applied.
+guidebook.info.stickyPiston=§nSticky Piston \n \n Pushes a block if a redstone signal is applied and pulls it back when it retracts.
+guidebook.info.tnt=§nTNT \n \n Explodes if it gets in contact with fire or an active redstone signal.
+guidebook.info.mossyCobblestone=§nMossy Cobblestone \n \n A more uncommon type of cobblestone which can be found around mob spawners.
+guidebook.info.stonePressurePlate=§nStone Pressure Plate \n \n Emits a redstone signal if a player or a mob step on it.
+guidebook.info.woodPressurePlate=§nStone Pressure Plate \n \n Emits a redstone signal if an entity is on top of it. This includes arrows, items and more.
+guidebook.info.stoneButton=§nStone Button \n \n Emits a redstone signal if a player right clicks on it.
+guidebook.info.woodButton=§nWood Button \n \n Emits a redstone signal if a player right clicks on it or when hit by an arrow.
+guidebook.info.vines=§nVines \n \n Can be found in the jungle and will grow.
 
 #Vanilla item infos
-guideBook.info.lingeringPotion=§nLingering Potion \n \n Surround it with arrows in a crafting table to apply the potion to them.
-guideBook.info.spectralArrow=§nSpectral Arrow \n \n Applies a glowing effect on your target which lets you see it through walls.
-guideBook.info.glassBottle=§nGlass Bottle \n \n Right click on water to fill.
-guideBook.info.dragonBreath=§nDragon's Breath \n \n Can be obtained by right clicking with a glass bottle while the ender dragon attacks you with his breath attack.
+guidebook.info.lingeringPotion=§nLingering Potion \n \n Surround it with arrows in a crafting table to apply the potion to them.
+guidebook.info.spectralArrow=§nSpectral Arrow \n \n Applies a glowing effect on your target which lets you see it through walls.
+guidebook.info.glassBottle=§nGlass Bottle \n \n Right click on water to fill.
+guidebook.info.dragonBreath=§nDragon's Breath \n \n Can be obtained by right clicking with a glass bottle while the ender dragon attacks you with his breath attack.
 
 #Thaumcraft item infos
-guideBook.info.thaumonomicon=§nThaumonomicon \n \n Tap a bookcase with your wand to get this item so you can begin your journey into Thaumcraft.
+guidebook.info.thaumonomicon=§nThaumonomicon \n \n Tap a bookcase with your wand to get this item so you can begin your journey into Thaumcraft.

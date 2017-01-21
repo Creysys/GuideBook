@@ -37,7 +37,7 @@ public class RecipeHandlerCrafting extends RecipeHandler {
 
     @Override
     public String getName() {
-        return "guideBook.crafting";
+        return "guidebook.crafting";
     }
 
     @Override
