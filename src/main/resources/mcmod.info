@@ -7,9 +7,9 @@
   "mcversion": "${mcversion}",
   "url": "",
   "updateUrl": "",
-  "authorList": ["Creysys"],
+  "authorList": ["Creysys","Torojima"],
   "credits": "To you",
-  "logoFile": "",
+  "logoFile": "guidebook_icon.png",
   "screenshots": [],
   "dependencies": []
 }
