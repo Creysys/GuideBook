@@ -1,10 +1,10 @@
 #Keybinds
-key.categories.guidebook=Guide Book
+key.categories.guidebook=GuideBook
 key.guidebook.recipe=Zeige Itemrezepte
 key.guidebook.usage=Zeige Itemverwendung
 
 #Items
-item.guideBook.name=Guide Book
+item.guideBook.name=GuideBook
 
 #Gui
 guidebook.search=Suchen
@@ -19,25 +19,25 @@ guidebook.info=Info
 
 #Vanilla block infos
 guidebook.info.dispenser=§nWerfer \n \n Spuckt Items wenn ein Redstone-Signal angelegt wird.
-guidebook.info.noteBlock=§nNotenblock \n \n Rechtsklick zum justieren und linksklick oder ein Redstone-Signal zum Spielen.
+guidebook.info.noteBlock=§nNotenblock \n \n Rechtsklick zum justieren und Linksklick oder ein Redstone-Signal zum Spielen.
 guidebook.info.poweredRail=§nAntriebsschiene \n \n Beschleunigt Loren wenn ein Redstone-Signal angelegt wird. Wenn nicht werden sie gestoppt.
 guidebook.info.detectorRail=Sensorschiene \n \n Sendet ein Redstone-Signal wenn eine Lore darauf steht.
 guidebook.info.activatorRail=§nAktivierungsschiene \n \n Stößt Entities aus einer Lore, blockiert Trichterloren und entzündet TNT.
 guidebook.info.piston=§nKolben \n \n Schiebt einen Block wenn ein Redstone-Signal angelegt wird.
-guidebook.info.stickyPiston=§nKebriger Kolben \n \n Schiebt und zieht einen Block wenn ein Redstone-Signal angelegt wird.
+guidebook.info.stickyPiston=§nKebriger Kolben \n \n Schiebt oder zieht einen Block wenn ein Redstone-Signal angelegt wird.
 guidebook.info.tnt=§nTNT \n \n Explodiert bei Kontakt mit Feuer oder wenn ein Redstone-Signal angelegt wird.
 guidebook.info.mossyCobblestone=§nBemooster Bruchstein \n \n Ein eher selten vorkommender Buchstein der in der Nähe von Mobspawnern gefunden werden kann.
 guidebook.info.stonePressurePlate=§nSteindruckplatte \n \n Sendet ein Redstone-Signal wenn ein Spieler oder ein Mob darauf tritt.
 guidebook.info.woodPressurePlate=§nHolzdruckplatte \n \n Sendet ein Redstone-Signal wenn ein Objekt darauf liegt. Das beinhaltet Pfeile, Items und mehr.
 guidebook.info.stoneButton=§nSteinknopf \n \n Sendet ein Redstone-Signal wenn ein Spieler auf ihn rechtsklickt.
 guidebook.info.woodButton=§nHolzknopf \n \n Sendet ein Redstone-Signal wenn er von einem Spieler gedrückt oder von einem Pfeil getroffen wird.
-guidebook.info.vines=§nRanke \n \n Wächst im Jungel und kann dort gefunden werdens.
+guidebook.info.vines=§nRanke \n \n Wächst im Jungel und kann dort gefunden werden.
 
 #Vanilla item infos
 guidebook.info.lingeringPotion=§nWurftrank \n \n Umrunde es in einem Arbeitstisch mit Pfeilen um den Trank darauf anzuwenden.
-guidebook.info.spectralArrow=§nSpectral Arrow \n \n Wendet ein Leuchteffekt auf dein Ziel an der es dich durch Wände sehen lässt.
-guidebook.info.glassBottle=§nGlasflache \n \n Rechtsklicke in Wasser zum Auffüllen.
-guidebook.info.dragonBreath=§nDrachenatem \n \n Kann durch rechklicken mit einer Wasserflache auf einen Enderdrachen gewonnen werden währed er dich mit seinem Drachenatem angreift.
+guidebook.info.spectralArrow=§nSpektralpfeil \n \n Wendet einen Leuchteffekt auf dein Ziel an der es dich durch Wände sehen lässt.
+guidebook.info.glassBottle=§nGlasflasche \n \n Rechtsklicke in Wasser zum Auffüllen.
+guidebook.info.dragonBreath=§nDrachenatem \n \n Kann durch rechklicken mit einer Wasserflasche auf einen Enderdrachen gewonnen werden, während er dich mit seinem Drachenatem angreift.
 
 #Thaumcraft item infos
-guidebook.info.thaumonomicon=§nThaumonomicon \n \n Tippe mit deinen Stab auf ein Buch um dieses Item zu bekommen damit du deine Reise in Thaumcraft starten kannst.
+guidebook.info.thaumonomicon=§nThaumonomicon \n \n Tippe mit deinen Stab auf ein Buch um dieses Item zu bekommen, damit du deine Reise in Thaumcraft starten kannst.
