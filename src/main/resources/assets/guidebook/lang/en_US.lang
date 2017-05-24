@@ -4,14 +4,14 @@ key.guidebook.recipe=Show recipes of item
 key.guidebook.usage=Show usages of item
 
 #Items
-item.guidebook.name=Guide Book
+item.guideBook.name=Guide Book
 
 #Gui
 guidebook.search=Search
 guidebook.nextPage=Next Page
 guidebook.previousPage=Previous Page
 guidebook.back=Back
-guidebook.putInWorkbench=Put in workbench
+guideBook.putInWorkbench=Put in workbench
 guidebook.crafting=Crafting
 guidebook.smelting=Smelting
 guidebook.brewing=Brewing
